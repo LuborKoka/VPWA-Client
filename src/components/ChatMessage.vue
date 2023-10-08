@@ -1,6 +1,7 @@
 <template>
   <div
-    class="bg-secondary rounded-borders q-py-xs q-px-sm white-text q-ma-xs inline-block"
+    class="rounded-borders q-py-xs q-px-sm white-text q-ma-xs message-bubble"
+    :class="isIncoming ? 'incoming bg-secondary' : 'outgoing bg-primary'"
   >
     <b> {{ sender }}</b
     >: <span> {{ content }}</span>
@@ -11,7 +12,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 export default defineComponent({
-  name: 'UserMessage',
+  name: 'ChatMessage',
   props: {
     sender: {
       type: String,
@@ -21,12 +22,25 @@ export default defineComponent({
       type: String,
       default: 'XDD',
     },
+    isIncoming: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 </script>
 
 <style scoped>
-.inline-block {
-  display: inline-block;
+.message-bubble {
+  max-width: 70%;
+  width: auto;
+}
+
+.incoming {
+  align-self: flex-start;
+}
+
+.outgoing {
+  align-self: flex-end;
 }
 </style>

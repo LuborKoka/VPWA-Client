@@ -1,6 +1,7 @@
 <template>
-  <form class="q-px-sm">
+  <form class="q-px-sm" @submit.prevent="submitMessage">
     <input
+      v-model="newMessage"
       class="q-py-xs q-px-sm command-line"
       type="text"
       required
@@ -12,10 +13,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'CommandLine',
+  props: {
+    sendMessage: {
+      type: Function,
+      required: true,
+    },
+  },
+  setup(props) {
+    const newMessage = ref('');
+
+    const submitMessage = () => {
+      if (newMessage.value.trim() !== '') {
+        props.sendMessage(newMessage.value.trim());
+        newMessage.value = '';
+      }
+    };
+
+    return {
+      newMessage,
+      submitMessage,
+    };
+  },
 });
 </script>
 
