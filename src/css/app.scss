@@ -1,1 +1,13 @@
 // app global css in SCSS form
+@import './quasar.variables.scss';
+.display-block {
+  display: block;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.white-text {
+  color: $white;
+}
