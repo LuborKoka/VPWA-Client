@@ -1,5 +1,5 @@
 <template>
-  <form class="q-px-sm" @submit.prevent="submitMessage" @submit="focusInput">
+  <form class="q-pa-md" @submit.prevent="submitMessage" @submit="focusInput">
     <input
       v-model="newMessage"
       class="q-py-xs q-px-sm command-line"

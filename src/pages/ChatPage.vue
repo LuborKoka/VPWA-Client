@@ -1,29 +1,29 @@
 <template>
-  <div>
-    <q-header elevated class="bg-primary q-pa-md text-h6 text-bold">
-      # {{ channelName }}
-    </q-header>
-
-    <div class="chat-window">
-      <chat-message
-        v-for="message in messages.filter((m) => m.channelName === channelName)"
-        :key="message.id"
-        :sender="message.sender"
-        :content="message.content"
-        :is-incoming="message.isIncoming"
-      >
-      </chat-message>
-    </div>
+  <q-page class="full-height column chat-grid">
+    <q-scroll-area>
+      <div class="column q-px-md">
+        <q-chat-message
+          v-for="message in messages.filter(
+            (m) => m.channelName === channelName
+          )"
+          :key="message.id"
+          :name="message.sender"
+          :text="[message.content]"
+          text-color="white"
+          :bg-color="message.isIncoming ? 'secondary' : 'primary'"
+          :sent="!message.isIncoming"
+        >
+        </q-chat-message>
+      </div>
+    </q-scroll-area>
     <command-line :send-message="addMessage"></command-line>
-  </div>
+  </q-page>
 </template>
 
 <script>
-import ChatMessage from 'src/components/ChatMessage.vue';
 import CommandLine from 'src/components/CommandLine.vue';
 export default {
   components: {
-    ChatMessage,
     CommandLine,
   },
   data() {
@@ -47,11 +47,6 @@ export default {
       ],
     };
   },
-  computed: {
-    channelName() {
-      return decodeURIComponent(this.$route.query.channelName);
-    },
-  },
   methods: {
     addMessage(content, channel) {
       this.messages.push({
@@ -67,11 +62,12 @@ export default {
 </script>
 
 <style scoped>
-.chat-window {
-  height: calc(100vh - 100px);
-  overflow-y: auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
+.flex-grow {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+.chat-grid {
+  display: grid;
+  grid-template-rows: 1fr auto;
 }
 </style>
