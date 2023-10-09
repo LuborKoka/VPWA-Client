@@ -6,7 +6,6 @@
     <b> {{ sender }}</b
     >: <span> {{ content }}</span>
   </div>
-  <br />
 </template>
 
 <script lang="ts">

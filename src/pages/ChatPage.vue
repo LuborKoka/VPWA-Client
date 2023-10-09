@@ -1,12 +1,12 @@
 <template>
   <div>
     <q-header elevated class="bg-primary q-pa-md text-h6 text-bold">
-      # {{ decodeURIComponent(channelName) }}
+      # {{ channelName }}
     </q-header>
 
     <div class="chat-window">
       <chat-message
-        v-for="message in messages"
+        v-for="message in messages.filter((m) => m.channelName === channelName)"
         :key="message.id"
         :sender="message.sender"
         :content="message.content"
@@ -30,28 +30,36 @@ export default {
     return {
       newMessage: '',
       messages: [
-        { id: 1, sender: 'User1', content: 'Hello!', isIncoming: true },
+        {
+          id: 1,
+          sender: 'User1',
+          content: 'Hello!',
+          isIncoming: true,
+          channelName: 'Channel 1',
+        },
         {
           id: 2,
           sender: 'Samo Chladnička',
           content: 'Electrolux',
           isIncoming: true,
+          channelName: 'XDDD',
         },
       ],
     };
   },
   computed: {
     channelName() {
-      return this.$route.query.channelName;
+      return decodeURIComponent(this.$route.query.channelName);
     },
   },
   methods: {
-    addMessage(content) {
+    addMessage(content, channel) {
       this.messages.push({
         id: this.messages.length + 1,
         sender: 'Me, Myself And I',
         content: content,
         isIncoming: false,
+        channelName: channel,
       });
     },
   },

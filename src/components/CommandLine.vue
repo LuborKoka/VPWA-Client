@@ -1,11 +1,12 @@
 <template>
-  <form class="q-px-sm" @submit.prevent="submitMessage">
+  <form class="q-px-sm" @submit.prevent="submitMessage" @submit="focusInput">
     <input
       v-model="newMessage"
       class="q-py-xs q-px-sm command-line"
       type="text"
       required
       placeholder="Type your command"
+      ref="input"
     />
 
     <q-btn type="submit" round class="q-ml-md" icon="send" />
@@ -14,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'CommandLine',
@@ -23,12 +25,21 @@ export default defineComponent({
       required: true,
     },
   },
+  methods: {
+    focusInput() {
+      (this.$refs.input as HTMLInputElement).focus();
+    },
+  },
   setup(props) {
     const newMessage = ref('');
+    const route = useRoute();
 
     const submitMessage = () => {
       if (newMessage.value.trim() !== '') {
-        props.sendMessage(newMessage.value.trim());
+        const channelName = decodeURIComponent(
+          route.query.channelName as string
+        );
+        props.sendMessage(newMessage.value.trim(), channelName); //how do i pass the channelName() as a function parameter here?
         newMessage.value = '';
       }
     };
@@ -65,10 +76,11 @@ input {
   &:valid {
     border-color: $primary;
     box-shadow: 0 0 5px 1px rgba($primary, 0.3);
+  }
 
-    & ~ button {
-      color: $primary;
-    }
+  &:valid ~ button {
+    color: $primary;
+    background-color: transparent;
   }
 }
 
