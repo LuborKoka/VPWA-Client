@@ -47,6 +47,11 @@ export default {
       ],
     };
   },
+  computed: {
+    channelName() {
+      return decodeURIComponent(this.$route.query.channelName);
+    },
+  },
   methods: {
     addMessage(content, channel) {
       this.messages.push({
