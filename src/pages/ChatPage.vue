@@ -7,7 +7,7 @@
             (m) => m.channelName === channelName
           )"
           :key="message.id"
-          :name="message.sender"
+          :name="message.isIncoming ? message.sender : username"
           :text="[message.content]"
           text-color="white"
           :bg-color="message.isIncoming ? 'secondary' : 'primary'"
@@ -22,9 +22,18 @@
 
 <script>
 import CommandLine from 'src/components/CommandLine.vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 export default {
   components: {
     CommandLine,
+  },
+  setup() {
+    const store = useStore();
+    const username = computed(() => store.getters.username);
+    return {
+      username,
+    };
   },
   data() {
     return {
