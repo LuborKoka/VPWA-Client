@@ -6,6 +6,7 @@
 
         <q-toolbar-title> # {{ channelName }}</q-toolbar-title>
 
+        <account-options></account-options>
         <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
       </q-toolbar>
     </q-header>
@@ -35,11 +36,13 @@
 import { ref } from 'vue';
 import ChannelNav from 'src/components/ChannelNav.vue';
 import AvailableUser from 'src/components/AvailableUser.vue';
+import AccountOptions from 'src/components/AccountOptions.vue';
 
 export default {
   components: {
     ChannelNav,
     AvailableUser,
+    AccountOptions,
   },
   computed: {
     channelName() {
