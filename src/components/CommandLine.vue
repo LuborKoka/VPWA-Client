@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { eventBus } from 'src/components/EventBus';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
@@ -36,12 +37,36 @@ export default defineComponent({
 
     const submitMessage = () => {
       if (newMessage.value.trim() !== '') {
+
+
+        if (newMessage.value.trim().startsWith('/join ') && newMessage.value.trim().length > 8)
+
+        {
+
         const channelName = decodeURIComponent(
           route.query.channelName as string
         );
+        
+      //zistujem či ecistuje taký server už ale to je deep backend 
+        const parts = newMessage.value.split(' ');
+        const newChannelName = parts[1];
+      
+        newMessage.value = newChannelName;
+        eventBus.emit('addChannelNavComponents', newChannelName);
         props.sendMessage(newMessage.value.trim(), channelName); //how do i pass the channelName() as a function parameter here?
         newMessage.value = '';
       }
+
+      else {
+        const channelName = decodeURIComponent(
+          route.query.channelName as string
+        );
+        
+        props.sendMessage(newMessage.value.trim(), channelName); //how do i pass the channelName() as a function parameter here?
+        newMessage.value = '';
+
+      }
+    }
     };
 
     return {

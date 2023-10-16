@@ -11,10 +11,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+    <q-drawer id="channel_list" show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <channel-nav title="Channel 1"></channel-nav>
-      <channel-nav title="Channel 2"></channel-nav>
+      <channel-nav></channel-nav>
       <channel-nav title="XDDD"></channel-nav>
+      
+
     </q-drawer>
 
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
@@ -33,10 +35,12 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+//import { ref } from 'vue';
+import { ref, onMounted , watchEffect } from 'vue';
 import ChannelNav from 'src/components/ChannelNav.vue';
 import AvailableUser from 'src/components/AvailableUser.vue';
 import AccountOptions from 'src/components/AccountOptions.vue';
+import { eventBus } from 'src/components/EventBus';
 
 export default {
   components: {
@@ -49,7 +53,11 @@ export default {
       return decodeURIComponent(this.$route.query.channelName);
     },
   },
+
+
   setup() {
+    
+
     const leftDrawerOpen = ref(false);
     const rightDrawerOpen = ref(false);
 
@@ -61,12 +69,84 @@ export default {
       rightDrawerOpen.value = !rightDrawerOpen.value;
     };
 
+    const channelTitles = ref([]);
+
+
+    onMounted(() => {
+      // Try to retrieve channelTitles from local storage
+      const storedChannelTitles = localStorage.getItem('channelTitles');
+
+      // If it exists in local storage, parse and set it
+      if (storedChannelTitles) {
+        channelTitles.value = JSON.parse(storedChannelTitles);
+      } else {
+        // Otherwise, initialize it with default values
+        channelTitles.value = ['Channel 1', 'Channel 2', 'XDDD'];
+      }
+    });
+
+    watchEffect(() => {
+      localStorage.setItem('channelTitles', JSON.stringify(channelTitles.value));
+    });
+    
+    eventBus.on('addChannelNavComponents', newChannelName => {
+      this.addChannelNavComponents(newChannelName);
+    });
+
     return {
+  
       leftDrawerOpen,
       toggleLeftDrawer,
       rightDrawerOpen,
       toggleRightDrawer,
+      channelTitles,
     };
+  
+
+    
+
+    
+      
+    
   },
+
+  
+
+  methods: {
+    addChannelNavComponents(newChannelTitles) {
+      // Create an array of ChannelNav components with titles to add
+
+      if (typeof newChannelTitles === 'string')
+      {
+        this.channelTitles = [...this.channelTitles, ...newChannelTitles];
+
+        this.$root.$emit('update-dynamic-components', this.channelTitles);
+      }
+      else
+      {
+        console.error('nechChannelTitle should be a string');
+      }
+
+      
+      
+
+      
+    },
+
+    created() {
+        // Listen for the 'update-dynamic-components' event and update the components
+        this.$root.$on('update-dynamic-components', newChannelTitles => {
+          this.channelTitles = newChannelTitles;
+        });
+      },
+
+
+  },
+
+
+  
+
+
+
 };
 </script>
