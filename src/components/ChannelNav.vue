@@ -22,8 +22,5 @@ export default defineComponent({
       default: 'Channel Name',
     },
   },
-
-  
-
 });
 </script>
