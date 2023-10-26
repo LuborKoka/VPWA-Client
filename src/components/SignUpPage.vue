@@ -36,6 +36,8 @@
             :rules="[(val) => val === password || 'Passwords do not match']"
             lazy-rules
           />
+
+          <q-input v-model="emaik" outlined label="E-mail" type="email" />
         </q-card-section>
 
         <q-card-actions align="center">
@@ -67,6 +69,7 @@ export default {
       username: '',
       password: '',
       confirmPassword: '',
+      email: '',
     };
   },
   methods: {
