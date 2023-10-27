@@ -19,13 +19,17 @@
       <div class="drawer-content">
         <!-- Upper Section -->
         <div class="drawer-section">
-          <div class="bg-primary text-white text-center text-h4">Public</div>
+          <q-card class="bg-primary text-white text-center text-h4 "> Public </q-card>
           <q-scroll-area style="height: 100%;">
             <div class="infinite-scroller">
               <!-- Add your channel-nav components here -->
               <channel-nav title="XDDD"></channel-nav>
             <channel-nav title="Channel 1"></channel-nav>
             <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
+            <channel-nav title="Channel 1"></channel-nav>
+            <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
             <channel-nav title="XDDD"></channel-nav>
             <channel-nav title="Channel 1"></channel-nav>
             <channel-nav title="Channel 2"></channel-nav>
@@ -36,13 +40,17 @@
 
         <!-- Lower Section -->
         <div class="drawer-section">
-          <div class="bg-primary text-white text-center text-h4">Private</div>
+          <q-card class="bg-primary text-white text-center text-h4 "> Private </q-card>
           <q-scroll-area style="height: 100%;">
             <div class="infinite-scroller">
               <!-- Add your channel-nav components here -->
               <channel-nav title="XDDD"></channel-nav>
             <channel-nav title="Channel 1"></channel-nav>
             <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
+            <channel-nav title="Channel 1"></channel-nav>
+            <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
             <channel-nav title="XDDD"></channel-nav>
             <channel-nav title="Channel 1"></channel-nav>
             <channel-nav title="Channel 2"></channel-nav>
