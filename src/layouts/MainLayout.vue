@@ -11,10 +11,48 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <channel-nav title="Channel 1"></channel-nav>
-      <channel-nav title="Channel 2"></channel-nav>
-      <channel-nav title="XDDD"></channel-nav>
+    <q-drawer id="canals" show-if-above v-model="leftDrawerOpen" side="left" bordered >
+
+      
+
+
+      <div class="drawer-content">
+        <!-- Upper Section -->
+        <div class="drawer-section">
+          <div class="bg-primary text-white text-center text-h4">Public</div>
+          <q-scroll-area style="height: 100%;">
+            <div class="infinite-scroller">
+              <!-- Add your channel-nav components here -->
+              <channel-nav title="XDDD"></channel-nav>
+            <channel-nav title="Channel 1"></channel-nav>
+            <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
+            <channel-nav title="Channel 1"></channel-nav>
+            <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
+            </div>
+          </q-scroll-area>
+        </div>
+
+        <!-- Lower Section -->
+        <div class="drawer-section">
+          <div class="bg-primary text-white text-center text-h4">Private</div>
+          <q-scroll-area style="height: 100%;">
+            <div class="infinite-scroller">
+              <!-- Add your channel-nav components here -->
+              <channel-nav title="XDDD"></channel-nav>
+            <channel-nav title="Channel 1"></channel-nav>
+            <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
+            <channel-nav title="Channel 1"></channel-nav>
+            <channel-nav title="Channel 2"></channel-nav>
+            <channel-nav title="XDDD"></channel-nav>
+            </div>
+          </q-scroll-area>
+        </div>
+      </div>
+
+
     </q-drawer>
 
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
@@ -31,6 +69,8 @@
     </q-page-container>
   </q-layout>
 </template>
+
+
 
 <script>
 import { ref } from 'vue';
@@ -70,3 +110,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.drawer-section {
+  flex: 1; /* Distributes available space equally between upper and lower sections */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Add other styles as needed */
+</style>
