@@ -130,11 +130,9 @@ export default {
 }
 
 .drawer-section {
-  flex: 1; /* Distributes available space equally between upper and lower sections */
+  flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-
-/* Add other styles as needed */
 </style>

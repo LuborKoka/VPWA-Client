@@ -64,7 +64,7 @@ export default {
       this.$store.dispatch('setUsername', this.username);
       this.$router.replace(
         `/chats?channelName=${encodeURIComponent('Channel 1')}`
-        //right here i need to store the username variable in global state
+        //toto bude defaultne nejaky link, kam sa posle user po prihlaseni
       );
     },
   },

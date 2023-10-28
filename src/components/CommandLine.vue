@@ -7,6 +7,7 @@
       required
       placeholder="Type your command"
       ref="input"
+      @input="handleInput"
     />
 
     <q-btn type="submit" round class="q-ml-md" icon="send" />
@@ -30,23 +31,28 @@ export default defineComponent({
       (this.$refs.input as HTMLInputElement).focus();
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const newMessage = ref('');
     const route = useRoute();
 
-    const submitMessage = () => {
+    function handleInput() {
+      emit('input', newMessage.value.trim());
+    }
+
+    function submitMessage() {
       if (newMessage.value.trim() !== '') {
         const channelName = decodeURIComponent(
           route.query.channelName as string
         );
-        props.sendMessage(newMessage.value.trim(), channelName); //how do i pass the channelName() as a function parameter here?
+        props.sendMessage(newMessage.value.trim(), channelName);
         newMessage.value = '';
       }
-    };
+    }
 
     return {
       newMessage,
       submitMessage,
+      handleInput,
     };
   },
 });
