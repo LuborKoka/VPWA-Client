@@ -32,13 +32,14 @@
 <script lang="ts">
 import CommandLine from 'src/components/CommandLine.vue';
 import UnsentMessage from 'src/components/UnsentMessage.vue';
+import { defineComponent } from 'vue';
 
 type TTypingMessage = {
   sender: string;
   content: string;
 };
 
-export default {
+export default defineComponent({
   components: {
     CommandLine,
     UnsentMessage,
@@ -66,7 +67,7 @@ export default {
     channelName() {
       return decodeURIComponent(this.$route.query.channelName as string);
     },
-    username() {
+    username(): string {
       return this.$store.getters.username;
     },
   },
@@ -117,7 +118,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style scoped>
