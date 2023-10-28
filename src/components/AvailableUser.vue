@@ -1,4 +1,5 @@
 <template>
+  <div>
   <q-item>
     <q-item-section avatar>
       <q-icon
@@ -11,6 +12,7 @@
       <q-item-label>{{ username }}</q-item-label>
     </q-item-section>
   </q-item>
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,6 +49,7 @@ export default defineComponent({
   border-radius: 50%;
   right: 5%;
   bottom: 5%;
+  z-index: 1;
 }
 .icon-with-status {
   color: $white;

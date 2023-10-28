@@ -54,12 +54,32 @@
     </q-drawer>
 
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
-      <available-user username="Peter Paprika" status="online"></available-user>
-      <available-user username="Štefan Nátierka" status="dnd"></available-user>
       <available-user
-        username="Michal Panvica"
-        status="offline"
-      ></available-user>
+        v-for="user in users"
+        :key="user.username"
+        :username="user.username"
+        :status="user.status"
+        @mouseover="showProfile(user)"
+        @mouseout="hideProfile"
+      >
+        <template v-slot:default="{ user }">
+          <div>
+            {{ user.username }}
+          </div>
+        </template>
+      </available-user>
+      <q-popup-proxy
+        v-model="showUserProfile"
+        anchor="bottom-right"
+        self="top-left"
+        style="z-index: 999"
+      >
+        <div class="profile-popup">
+          <h2>{{ userProfile.username }}</h2>
+          <p>Status: {{ userProfile.status }}</p>
+          <!-- Add more profile details here -->
+        </div>
+      </q-popup-proxy>
     </q-drawer>
 
     <q-page-container>
@@ -101,6 +121,7 @@ export default {
     };
   },
   setup() {
+    const delay = 5000;
     const leftDrawerOpen = ref(false);
     const rightDrawerOpen = ref(false);
 
@@ -117,7 +138,37 @@ export default {
       toggleLeftDrawer,
       rightDrawerOpen,
       toggleRightDrawer,
+      showUserProfile: false,
+      userProfile: {},
+      users: [
+        { username: 'Peter Paprika', status: 'online' },
+        { username: 'Štefan Nátierka', status: 'dnd' },
+        { username: 'Michal Panvica', status: 'offline' },
+      ],
+      delay,
     };
+  },
+
+  methods: {
+    showProfile(user) {
+      if (this.mouseoutTimer) {
+        clearTimeout(this.mouseoutTimer);
+      }
+
+      this.userProfile = user;
+      this.showUserProfile = true;
+      this.rightDrawerOpen = false;
+      this.leftDrawerOpen = false;
+    },
+
+    hideProfile() {
+      this.mouseoutTimer = setTimeout(() => {
+        this.showUserProfile = false;
+        this.leftDrawerOpen = true;
+        this.rightDrawerOpen = true;
+        this.mouseoutTimer = null;
+      }, this.delay);
+    },
   },
 };
 </script>
