@@ -76,7 +76,7 @@ export default defineComponent({
       const channel = this.channels.find((c) => c.name === this.channelName);
       if (!channel) return;
 
-      const value = (event.target as HTMLInputElement).value;
+      const value = (event.target as HTMLInputElement).value.trim();
 
       const messageIndex = channel.isTypingMessages.findIndex(
         (m) => m.sender === this.username

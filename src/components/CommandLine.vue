@@ -36,7 +36,7 @@ export default defineComponent({
     const route = useRoute();
 
     function handleInput() {
-      emit('input', newMessage.value.trim());
+      emit('input');
     }
 
     function submitMessage() {
