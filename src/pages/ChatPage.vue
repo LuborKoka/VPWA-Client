@@ -101,6 +101,13 @@ export default {
       const channel = this.channels.find((c) => c.name === channelName);
 
       if (channel) {
+        const unsentMessageIndex = channel.isTypingMessages.findIndex(
+          (m) => m.sender === this.username
+        );
+
+        if (unsentMessageIndex !== -1)
+          channel.isTypingMessages.splice(unsentMessageIndex, 1);
+
         channel.messages.push({
           id: channel.messages.length + 1,
           sender: this.username,
