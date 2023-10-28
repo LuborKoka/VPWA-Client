@@ -11,56 +11,46 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer id="canals" show-if-above v-model="leftDrawerOpen" side="left" bordered >
-
-      
-
-
+    <q-drawer
+      id="canals"
+      show-if-above
+      v-model="leftDrawerOpen"
+      side="left"
+      bordered
+    >
       <div class="drawer-content">
         <!-- Upper Section -->
         <div class="drawer-section">
-          <q-card class="bg-primary text-white text-center text-h4 "> Public </q-card>
-          <q-scroll-area style="height: 100%;">
+          <q-card class="bg-primary text-white text-center text-h4">
+            Public
+          </q-card>
+          <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
-              <!-- Add your channel-nav components here -->
-              <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="Channel 1"></channel-nav>
-            <channel-nav title="Channel 2"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="Channel 1"></channel-nav>
-            <channel-nav title="Channel 2"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="Channel 1"></channel-nav>
-            <channel-nav title="Channel 2"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
+              <channel-nav
+                v-for="channel in public"
+                :title="channel.title"
+                :key="channel.title"
+              ></channel-nav>
             </div>
           </q-scroll-area>
         </div>
 
         <!-- Lower Section -->
         <div class="drawer-section">
-          <q-card class="bg-primary text-white text-center text-h4 "> Private </q-card>
-          <q-scroll-area style="height: 100%;">
+          <q-card class="bg-primary text-white text-center text-h4">
+            Private
+          </q-card>
+          <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
-              <!-- Add your channel-nav components here -->
-              <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="Channel 1"></channel-nav>
-            <channel-nav title="Channel 2"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="Channel 1"></channel-nav>
-            <channel-nav title="Channel 2"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
-            <channel-nav title="Channel 1"></channel-nav>
-            <channel-nav title="Channel 2"></channel-nav>
-            <channel-nav title="XDDD"></channel-nav>
+              <channel-nav
+                v-for="channel in private"
+                :title="channel.title"
+                :key="channel.title"
+              ></channel-nav>
             </div>
           </q-scroll-area>
         </div>
       </div>
-
-
     </q-drawer>
 
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
@@ -78,8 +68,6 @@
   </q-layout>
 </template>
 
-
-
 <script>
 import { ref } from 'vue';
 import ChannelNav from 'src/components/ChannelNav.vue';
@@ -96,6 +84,21 @@ export default {
     channelName() {
       return decodeURIComponent(this.$route.query.channelName);
     },
+  },
+  data() {
+    return {
+      public: [
+        { title: 'XDDD' },
+        { title: 'Channel 1' },
+        { title: 'Channel 2' },
+        { title: 'Public channel' },
+      ],
+      private: [
+        { title: 'Private 1' },
+        { title: 'Private 2' },
+        { title: 'Private 3' },
+      ],
+    };
   },
   setup() {
     const leftDrawerOpen = ref(false);
