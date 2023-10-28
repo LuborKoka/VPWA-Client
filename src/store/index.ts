@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 
-type State = {
+export type StateType = {
   username: string;
   status: 'online' | 'dnd' | 'offline';
 };
@@ -9,7 +9,7 @@ export default createStore({
   state: {
     username: '',
     status: 'online', // neviem, ci to treba, ale tak uvidime
-  } as State,
+  },
   mutations: {
     SET_USERNAME(state, username) {
       state.username = username;
