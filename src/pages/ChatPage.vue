@@ -34,9 +34,22 @@ import CommandLine from 'src/components/CommandLine.vue';
 import UnsentMessage from 'src/components/UnsentMessage.vue';
 import { defineComponent } from 'vue';
 
-type TTypingMessage = {
+type TypingMessage = {
   sender: string;
   content: string;
+};
+
+type Message = {
+  sender: string;
+  content: string;
+  id: number;
+  isIncoming: boolean;
+};
+
+type Channel = {
+  name: string;
+  messages: Message[];
+  isTypingMessages: TypingMessage[];
 };
 
 export default defineComponent({
@@ -46,6 +59,7 @@ export default defineComponent({
   },
   data() {
     return {
+      //neni su tu vsetky kanale, takze nepojde chat v kazdom momentalne
       newMessage: '',
       channels: [
         {
@@ -58,9 +72,24 @@ export default defineComponent({
               isIncoming: true,
             },
           ],
-          isTypingMessages: [] as TTypingMessage[],
+          isTypingMessages: [],
         },
-      ],
+        {
+          name: 'XDDD',
+          messages: [],
+          isTypingMessages: [],
+        },
+        {
+          name: 'Channel 2',
+          messages: [],
+          isTypingMessages: [],
+        },
+        {
+          name: 'Private 1',
+          messages: [],
+          isTypingMessages: [],
+        },
+      ] as Channel[],
     };
   },
   computed: {
