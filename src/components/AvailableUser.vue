@@ -1,22 +1,25 @@
 <template>
   <div>
-  <q-item>
-    <q-item-section avatar>
+  <q-btn @click="emitClick" class="available-user-button" >
+  <q-item >
+    <q-item-section avatar >
       <q-icon
+        
         name="person"
         class="icon-with-status q-pa-xs"
         :class="status"
       ></q-icon>
     </q-item-section>
     <q-item-section>
-      <q-item-label>{{ username }}</q-item-label>
+      <q-item-label> {{ username }}</q-item-label>
     </q-item-section>
   </q-item>
+  </q-btn>
   </div>
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { PropType, defineComponent, handleError } from 'vue';
 
 export default defineComponent({
   name: 'AvailableUser',
@@ -33,7 +36,16 @@ export default defineComponent({
       },
     },
   },
+
+  methods: {
+    emitClick() {
+      this.$emit('click', this.username, this.status);
+    },
+  },
+
 });
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -80,5 +92,10 @@ export default defineComponent({
   @include statusIcon();
   background-color: red;
   color: $white;
+}
+
+.available-user-button {
+  text-align: left; // Adjust the alignment as needed
+  width: 100%; // Make the button fill the available width
 }
 </style>

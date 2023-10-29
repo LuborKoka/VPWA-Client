@@ -129,5 +129,6 @@ export default defineComponent({
 .chat-grid {
   display: grid;
   grid-template-rows: 1fr auto;
+  z-index: 10;
 }
 </style>
