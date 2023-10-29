@@ -1,25 +1,24 @@
 <template>
   <div>
-  <q-btn @click="emitClick" class="available-user-button" >
-  <q-item >
-    <q-item-section avatar >
-      <q-icon
-        
-        name="person"
-        class="icon-with-status q-pa-xs"
-        :class="status"
-      ></q-icon>
-    </q-item-section>
-    <q-item-section>
-      <q-item-label> {{ username }}</q-item-label>
-    </q-item-section>
-  </q-item>
-  </q-btn>
+    <q-btn @click="emitClick" class="available-user-button" align="left">
+      <q-item>
+        <q-item-section avatar>
+          <q-icon
+            name="person"
+            class="icon-with-status q-pa-xs"
+            :class="status"
+          ></q-icon>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label> {{ username }}</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-btn>
   </div>
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent, handleError } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'AvailableUser',
@@ -42,10 +41,7 @@ export default defineComponent({
       this.$emit('click', this.username, this.status);
     },
   },
-
 });
-
-
 </script>
 
 <style lang="scss" scoped>
