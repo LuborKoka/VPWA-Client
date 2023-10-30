@@ -12,8 +12,9 @@
             outlined
             label="Username"
             class="q-mb-md"
+            type="text"
             :rules="[
-              (val) => val.lenth >= 4 || 'Please use minimum 4 characters',
+              (val) => val.length >= 4 || 'Please use minimum 4 characters',
             ]"
             lazy-rules
           />
