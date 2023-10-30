@@ -1,3 +1,8 @@
+# Made by
+- Adrián Hládek
+- Lubor Koka
+
+
 # Quasar App (quasar-project)
 
 A Quasar Project
