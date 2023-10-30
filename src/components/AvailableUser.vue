@@ -31,7 +31,7 @@
           {{ username }}
         </q-item-label>
         <q-item-label >
-          <q-badge class="custom-badge" style="font-size: 20px;" :color="statusColor"> {{ formattedStatus }}</q-badge>
+          <q-badge class="custom-badge" style="font-size: 20px; padding: 10px;" :color="statusColor"> {{ formattedStatus }}</q-badge>
         </q-item-label>
         
         <q-item-label caption>235 messages</q-item-label>
