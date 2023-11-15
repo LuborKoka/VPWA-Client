@@ -1,26 +1,27 @@
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
-  /*{
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
-  },*/
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/',
-    component: () => import('pages/AuthPage.vue'),
+    // try redirect to home route
+    redirect: () => ({ name: 'home' })
   },
   {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    path: '/auth',
+    component: () => import('layouts/AuthLayout.vue'),
+    children: [
+      { path: 'register', name: 'register', meta: { guestOnly: true }, component: () => import('pages/SignUpPage.vue') },
+      { path: 'login', name: 'login', meta: { guestOnly: true }, component: () => import('pages/LoginPage.vue') }
+    ]
   },
   {
     path: '/chats',
+    // channels requires auth
+    meta: { requiresAuth: true },
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/ChatPage.vue') }],
+    children: [
+      { path: '', name: 'home', component: () => import('src/pages/ChatPage.vue') }
+    ]
   },
 ];
 

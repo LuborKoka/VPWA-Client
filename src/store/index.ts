@@ -1,10 +1,25 @@
 import { createStore } from 'vuex';
+import type { IAuthState } from './module-auth/state';
+import auth from './module-auth';
 
-export type StateType = {
+export interface IState {
+  auth: IAuthState
+};
+/*
+export type StateType = { //toto jest moje
   username: string;
   status: 'online' | 'dnd' | 'offline';
-};
+};*/
 
+const store = createStore<IState>({
+  modules: {
+    auth
+  }
+});
+
+export default store;
+
+/*
 export default createStore({
   state: {
     username: '',
@@ -23,4 +38,4 @@ export default createStore({
   getters: {
     username: (state) => state.username,
   },
-});
+});*/
