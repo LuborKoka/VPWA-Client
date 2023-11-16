@@ -99,6 +99,8 @@
         //signuppage.vue
         //tuto je problem, vraj auth/register action neexistuje. ale evidentne mame vsetko spravne a koniec koncov, isiel som podla
         //kuricovho githubu doslova copy pase
+
+        //tuto metodu onSubmit uspesne zavola, ked odosles ten formular, ale this.$store.dispatch uz hadze error
         this.$store.dispatch('auth/register', this.form).then(() => this.$router.push(this.redirectTo))
       }
     }

@@ -1,8 +1,8 @@
 import { User } from 'src/contracts'
 import { MutationTree } from 'vuex'
-import { IAuthState } from './state'
+import { AuthStateInterface } from './state'
 
-const mutations: MutationTree<IAuthState> = {
+const mutations: MutationTree<AuthStateInterface> = {
   AUTH_START (state) {
     state.status = 'pending'
     state.errors = []

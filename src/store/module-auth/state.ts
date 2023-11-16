@@ -1,12 +1,12 @@
 import { User } from 'src/contracts'
 
-export interface IAuthState {
-  user: User | null,
-  status: 'pending' | 'success' | 'error',
-  errors: { message: string, field?: string }[]
-}
+export interface AuthStateInterface {
+    user: User | null,
+    status: 'pending' | 'success' | 'error',
+    errors: { message: string, field?: string }[]
+  }
 
-function state (): IAuthState {
+function state (): AuthStateInterface {
   return {
     user: null,
     status: 'success',

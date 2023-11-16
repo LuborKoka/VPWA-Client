@@ -1,41 +1,61 @@
-import { createStore } from 'vuex';
-import type { IAuthState } from './module-auth/state';
-import auth from './module-auth';
+import { store } from 'quasar/wrappers'
+import { InjectionKey } from 'vue'
+import { Router } from 'vue-router'
+import { createStore, Store as VuexStore, useStore as vuexUseStore } from 'vuex'
+import auth from './module-auth'
+import type { AuthStateInterface } from './module-auth/state'
 
-export interface IState {
-  auth: IAuthState
-};
+// import example from './module-example'
+// import { ExampleStateInterface } from './module-example/state';
+
 /*
-export type StateType = { //toto jest moje
-  username: string;
-  status: 'online' | 'dnd' | 'offline';
-};*/
+ * If not building with SSR mode, you can
+ * directly export the Store instantiation;
+ *
+ * The function below can be async too; either use
+ * async/await or return a Promise which resolves
+ * with the Store instance.
+ */
 
-const store = createStore<IState>({
-  modules: {
-    auth
+export interface StateInterface {
+  // Define your own store structure, using submodules if needed
+  // example: ExampleStateInterface;
+  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
+  auth: AuthStateInterface
+}
+
+// provide typings for `this.$store`
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $store: VuexStore<StateInterface>
   }
-});
+}
 
-export default store;
+// provide typings for `useStore` helper
+export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-key')
 
-/*
-export default createStore({
-  state: {
-    username: '',
-    status: 'online', // neviem, ci to treba, ale tak uvidime
-  },
-  mutations: {
-    SET_USERNAME(state, username) {
-      state.username = username;
+// Provide typings for `this.$router` inside Vuex store
+ declare module 'vuex' {
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   export interface Store<S> {
+     readonly $router: Router;
+   }
+ }
+
+export default store(function (/* { ssrContext } */) {
+  const Store = createStore<StateInterface>({
+    modules: {
+      auth
     },
-  },
-  actions: {
-    setUsername({ commit }, username) {
-      commit('SET_USERNAME', username);
-    },
-  },
-  getters: {
-    username: (state) => state.username,
-  },
-});*/
+
+    // enable strict mode (adds overhead!)
+    // for dev mode and --debug builds only
+    strict: !!process.env.DEBUGGING
+  })
+
+  return Store
+})
+
+export function useStore () {
+  return vuexUseStore(storeKey)
+}

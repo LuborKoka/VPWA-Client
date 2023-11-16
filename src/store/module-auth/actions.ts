@@ -1,10 +1,10 @@
 import { ActionTree } from 'vuex'
-import { IState } from '../index'
-import { IAuthState } from './state'
+import { StateInterface } from '../index'
+import { AuthStateInterface } from './state'
 import { authService, authManager } from 'src/services'
 import { LoginCredentials, RegisterData } from 'src/contracts'
 
-const actions: ActionTree<IAuthState, IState> = {
+const actions: ActionTree<AuthStateInterface, StateInterface> = {
   async check ({ commit  }) {
     try {
       commit('AUTH_START')

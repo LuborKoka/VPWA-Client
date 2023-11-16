@@ -1,8 +1,8 @@
 import { GetterTree } from 'vuex'
-import { IState } from '../index'
-import { IAuthState } from './state'
+import { StateInterface } from '../index'
+import { AuthStateInterface } from './state'
 
-const getters: GetterTree<IAuthState, IState> = {
+const getters: GetterTree<AuthStateInterface, StateInterface> = {
   isAuthenticated (context) {
     return context.user !== null
   }
