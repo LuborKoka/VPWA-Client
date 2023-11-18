@@ -5,9 +5,9 @@ import state from './state';
 
 
 export default {
-  state,
-  getters,
-  actions,
-  mutations
+    state,
+    getters,
+    actions,
+    mutations
 };
 

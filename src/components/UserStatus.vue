@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   setup() {
     const statusItems = ref([
       { label: 'Online', color: 'green' },
@@ -32,6 +32,7 @@ export default {
     const status = ref(statusItems.value[0].label);
     const statusColor = ref(statusItems.value[0].color);
 
+    //dorobit, aby to aj nieco realne robilo a nie len menilo farby
     const onItemClick = (item) => {
       status.value = item.label;
       statusColor.value = item.color;
@@ -44,5 +45,5 @@ export default {
       onItemClick,
     };
   },
-};
+});
 </script>

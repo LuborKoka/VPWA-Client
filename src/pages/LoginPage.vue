@@ -10,11 +10,11 @@
       <q-form ref="form" class="q-gutter-md">
         <q-card-section>
           <q-input
-            name="username"
-            id="username"
-            v-model.trim="credentials.username"
+            name="email"
+            id="email"
+            v-model.trim="credentials.email"
             type="text"
-            label="Username"
+            label="Email"
             autofocus
           />
           <q-input
@@ -62,12 +62,13 @@
     name: 'LoginPage',
     data () {
       return {
-        credentials: { username: '', password: '', remember: false },
+        credentials: { email: '', password: '', remember: false },
         showPassword: false
       }
     },
     computed: {
       redirectTo (): RouteLocationRaw {
+        //any idea where this.route.query.redirect was set?
         return (this.$route.query.redirect as string) || { name: 'home' }
       },
       loading (): boolean {
@@ -76,7 +77,7 @@
     },
     methods: {
       onSubmit () {
-        this.$store.dispatch('auth/login', this.credentials).then(() => this.$router.push(this.redirectTo))
+        this.$store.dispatch('login', this.credentials).then(() => this.$router.push(this.redirectTo + '?name=General'))
       }
     }
   })

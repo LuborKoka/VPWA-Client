@@ -18,14 +18,14 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
   },
   async register ({ commit }, form: RegisterData) {
     try {
-      commit('AUTH_START')
-      const user = await authService.register(form)
-      commit('AUTH_SUCCESS', null)
-      return user
+        commit('AUTH_START')
+        const user = await authService.register(form)
+        commit('AUTH_SUCCESS', null)
+        return user
     } catch (err) {
-      commit('AUTH_ERROR', err)
-      console.log(err)
-      throw err
+        commit('AUTH_ERROR', err)
+        console.log(err)
+        throw err
     }
   },
   async login ({ commit }, credentials: LoginCredentials) {

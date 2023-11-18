@@ -29,26 +29,21 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { defineComponent } from 'vue';
 import UserStatus from './UserStatus.vue';
-import { useStore } from 'vuex';
+import { mapGetters } from 'vuex';
 
-export default {
+export default defineComponent({
   components: {
     UserStatus,
   },
-  setup() {
-    const store = useStore();
-    const username = computed(() => store.getters.username);
-
-    return {
-      username,
-    };
+  computed: {
+    ...mapGetters(['username'])
   },
   methods: {
     logout() {
-      this.$router.replace('/');
+      this.$router.replace('/auth/login');
     },
   },
-};
+});
 </script>
