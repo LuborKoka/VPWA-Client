@@ -69,7 +69,7 @@
     computed: {
       redirectTo (): RouteLocationRaw {
         //any idea where this.route.query.redirect was set?
-        return (this.$route.query.redirect as string) || { name: 'home' }
+        return (this.$route.query.redirect as string) || '/channels?name=General'
       },
       loading (): boolean {
         return this.$store.state.auth.status === 'pending'
@@ -77,7 +77,7 @@
     },
     methods: {
       onSubmit () {
-        this.$store.dispatch('login', this.credentials).then(() => this.$router.push(this.redirectTo + '?name=General'))
+        this.$store.dispatch('login', this.credentials).then(() => this.$router.push(this.redirectTo))
       }
     }
   })

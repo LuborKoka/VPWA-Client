@@ -58,20 +58,20 @@
     <div class="q-pa-md">
 
 
-     
-      <available-user 
+
+      <available-user
 
         v-for="user in users"
-         
+
         :key="user.username"
         :username="user.username"
         :status="user.status"
         @click="handleUserClick"
-        
+
       >
       </available-user>
-     
-    
+
+
 
       </div>
     </q-drawer>
@@ -83,12 +83,12 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, defineComponent } from 'vue';
 import ChannelNav from 'src/components/ChannelNav.vue';
 import AvailableUser from 'src/components/AvailableUser.vue';
 import AccountOptions from 'src/components/AccountOptions.vue';
 
-export default {
+export default defineComponent({
   components: {
     ChannelNav,
     AvailableUser,
@@ -96,12 +96,13 @@ export default {
   },
   computed: {
     channelName() {
-      return decodeURIComponent(this.$route.query.channelName);
+      return decodeURIComponent(this.$route.query.name);
     },
   },
   data() {
     return {
       public: [
+        { title: 'General' },
         { title: 'XDDD' },
         { title: 'Channel 1' },
         { title: 'Channel 2' },
@@ -153,8 +154,8 @@ export default {
     };
   },
 
-  
-};
+
+});
 </script>
 
 <style scoped>

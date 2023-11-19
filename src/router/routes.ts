@@ -15,9 +15,9 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/chats',
+    path: '/channels',
     // channels requires auth
-    meta: { requiresAuth: true },
+    //meta: { requiresAuth: true },
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', name: 'home', component: () => import('src/pages/ChatPage.vue') }

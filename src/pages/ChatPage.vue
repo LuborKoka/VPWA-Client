@@ -63,6 +63,11 @@ export default defineComponent({
       newMessage: '',
       channels: [
         {
+            name: 'General',
+            messages: [],
+            isTypingMessages: []
+        },
+        {
           name: 'Channel 1',
           messages: [
             {
@@ -94,7 +99,7 @@ export default defineComponent({
   },
   computed: {
     channelName() {
-      return decodeURIComponent(this.$route.query.channelName as string);
+      return decodeURIComponent(this.$route.query.name as string);
     },
     username(): string {
       return this.$store.getters.username;

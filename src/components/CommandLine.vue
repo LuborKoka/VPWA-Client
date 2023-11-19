@@ -42,7 +42,7 @@ export default defineComponent({
     function submitMessage() {
       if (newMessage.value.trim() !== '') {
         const channelName = decodeURIComponent(
-          route.query.channelName as string
+          route.query.name as string
         );
         props.sendMessage(newMessage.value.trim(), channelName);
         newMessage.value = '';
