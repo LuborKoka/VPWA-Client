@@ -38,7 +38,9 @@ export default defineComponent({
     UserStatus,
   },
   computed: {
-    ...mapGetters(['username'])
+    ...mapGetters('auth', {
+        username: ['username']}
+    )
   },
   methods: {
     logout() {

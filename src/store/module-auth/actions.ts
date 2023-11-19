@@ -5,15 +5,21 @@ import { authService, authManager } from 'src/services'
 import { LoginCredentials, RegisterData } from 'src/contracts'
 
 const actions: ActionTree<AuthStateInterface, StateInterface> = {
-  async check ({ commit  }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async check ({ state, commit, dispatch }) {
     try {
-      commit('AUTH_START')
-      const user = await authService.me()
-      commit('AUTH_SUCCESS', user)
-      return user !== null
+        commit('AUTH_START')
+        const user = await authService.me()
+        //toto bude fungovat az po funkcnom logine zrejme
+        /* if (user?.id !== state.user?.id) {
+            console.log('this is happening')
+            await dispatch('channels/join', 'General', { root: true })
+        }*/
+        commit('AUTH_SUCCESS', user)
+        return user !== null
     } catch (err) {
-      commit('AUTH_ERROR', err)
-      throw err
+        commit('AUTH_ERROR', err)
+        throw err
     }
   },
   async register ({ commit }, form: RegisterData) {

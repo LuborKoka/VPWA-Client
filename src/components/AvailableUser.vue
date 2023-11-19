@@ -18,11 +18,11 @@
         style="min-height: 100px; min-width: 265px;" align="left">
 
 
-        
+
         <q-item-section side>
         <q-avatar rounded size="96px">
           <img src="https://cdn.quasar.dev/img/avatar.png" />
-          
+
         </q-avatar>
       </q-item-section>
       <q-item-section>
@@ -33,7 +33,7 @@
         <q-item-label >
           <q-badge class="custom-badge" style="font-size: 20px; padding: 10px;" :color="statusColor"> {{ formattedStatus }}</q-badge>
         </q-item-label>
-        
+
         <q-item-label caption>235 messages</q-item-label>
         <q-item-label caption>Member since: {{ currentDate }} </q-item-label>
       </q-item-section>
@@ -61,10 +61,6 @@ export default defineComponent({
         return ['online', 'dnd', 'offline'].includes(value);
       },
     },
-    
-    
-
-
   },
 
   data() {
@@ -72,7 +68,7 @@ export default defineComponent({
       currentDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     };
   },
-  
+
   computed: {
     statusColor() {
       // Define a function to map status text to colors
@@ -96,14 +92,14 @@ export default defineComponent({
     },
 
   },
-  
+
 
   methods: {
     emitClick() {
       this.$emit('click', this.username, this.status);
     },
 
-   
+
 
 
   },
