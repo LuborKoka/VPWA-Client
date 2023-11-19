@@ -1,12 +1,10 @@
-import { User } from './Auth'
-
 export type RawMessage = string
 
 export interface SerializedMessage {
-  createdBy: string
+  sender: string
   content: string
   channelId: string,
   createdAt: string,
-  id: number,
-  author: User
+  id: string,
+  isIncoming: boolean
 }

@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable>
+  <q-item clickable @click="setActiveChannel">
     <router-link
       class="text-primary text-bold full-width q-pa-md text-decoration-none display-block"
       :to="{
@@ -14,6 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapMutations } from 'vuex';
 export default defineComponent({
   name: 'ChannelNav',
   props: {
@@ -22,5 +23,12 @@ export default defineComponent({
       default: 'Channel Name',
     },
   },
+  methods: {
+    ...mapMutations('channels', ['SET_ACTIVE']),
+
+    setActiveChannel() {
+        this.SET_ACTIVE(this.title)
+    }
+  }
 });
 </script>
