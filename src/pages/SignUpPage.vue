@@ -97,7 +97,7 @@
     methods: {
       onSubmit () {
         //nenavidim tuto skolu z celeho mojho srdca.
-        this.$store.dispatch('register', this.form)
+        this.$store.dispatch('auth/register', this.form)
         .then(() =>{
             this.$router.push(this.redirectTo)
         })
