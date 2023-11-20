@@ -7,7 +7,7 @@
         </div>
       </q-card-section>
 
-      <q-form ref="form" class="q-gutter-md">
+      <q-form ref="form" class="q-gutter-md" @submit.prevent="handleSubmit">
         <q-card-section>
 
           <q-input
@@ -65,7 +65,7 @@
             label="Register"
             color="primary"
             :loading="loading"
-            @click="onSubmit"
+            type="submit"
           />
         </q-card-actions>
       </q-form>
@@ -95,7 +95,7 @@
       },
     },
     methods: {
-      onSubmit () {
+      handleSubmit () {
         //nenavidim tuto skolu z celeho mojho srdca.
         this.$store.dispatch('auth/register', this.form)
         .then(() =>{

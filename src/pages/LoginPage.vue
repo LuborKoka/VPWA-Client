@@ -7,7 +7,7 @@
         </div>
       </q-card-section>
 
-      <q-form ref="form" class="q-gutter-md">
+      <q-form ref="form" class="q-gutter-md" @submit.prevent="handleSubmit">
         <q-card-section>
           <q-input
             name="email"
@@ -46,7 +46,7 @@
             label="Login"
             color="primary"
             :loading="loading"
-            @click="onSubmit"
+            type="submit"
           />
         </q-card-actions>
       </q-form>
@@ -56,7 +56,6 @@
 
   <script lang="ts">
   import { defineComponent } from 'vue'
-  import { RouteLocationRaw } from 'vue-router'
 
   export default defineComponent({
     name: 'LoginPage',
@@ -67,17 +66,13 @@
       }
     },
     computed: {
-      redirectTo (): RouteLocationRaw {
-        //any idea where this.route.query.redirect was set?
-        return (this.$route.query.redirect as string) || '/channels?name=General'
-      },
       loading (): boolean {
         return this.$store.state.auth.status === 'pending'
       }
     },
     methods: {
-      onSubmit () {
-        this.$store.dispatch('auth/login', this.credentials).then(() => this.$router.push(this.redirectTo))
+      handleSubmit () {
+        this.$store.dispatch('auth/login', this.credentials).then(() => this.$router.push('/channels?name=General'))
       }
     }
   })
