@@ -48,7 +48,6 @@ export default defineComponent({
   },
     data() {
         return {
-        //neni su tu vsetky kanale, takze nepojde chat v kazdom momentalne
         newMessage: '',
         isTypingMessages: [] as TypingMessage[]
         };

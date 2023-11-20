@@ -8,12 +8,7 @@ export interface AuthStateInterface {
 
 function state (): AuthStateInterface {
   return {
-    user: { //bude treba potom usera prepisat na null
-        username: 'Emil Igelitka',
-        email: 'Jozo',
-        createdAt: 'whatever',
-        id: 'uuid'
-    },
+    user: null,
     status: 'success',
     errors: []
   }

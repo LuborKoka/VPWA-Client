@@ -18,8 +18,10 @@ export interface LoginCredentials {
 }
 
 export interface User {
-  id: string
-  email: string
-  createdAt: string,
-  username: string
+    id: string
+    email: string
+    isMuted: boolean,
+    username: string,
+    status: string,
+    channels: []
 }
