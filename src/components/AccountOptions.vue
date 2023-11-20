@@ -34,18 +34,18 @@ import UserStatus from './UserStatus.vue';
 import { mapGetters } from 'vuex';
 
 export default defineComponent({
-  components: {
-    UserStatus,
-  },
-  computed: {
-    ...mapGetters('auth', {
-        username: ['username']}
-    )
-  },
-  methods: {
-    logout() {
-      this.$router.replace('/auth/login');
+    components: {
+        UserStatus,
     },
-  },
+    computed: {
+        ...mapGetters('auth', {
+            username: ['username']}
+        )
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('auth/logout')
+        },
+    },
 });
 </script>
