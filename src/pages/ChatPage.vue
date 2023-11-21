@@ -5,11 +5,11 @@
         <q-chat-message
           v-for="message in currentMessages"
           :key="message.id"
-          :name="message.isIncoming ? message.sender : username"
+          :name="message.senderName"
           :text="[message.content]"
           text-color="white"
-          :bg-color="message.isIncoming ? 'secondary' : 'primary'"
-          :sent="!message.isIncoming"
+          :bg-color="isIncoming(message.senderName) ? 'secondary' : 'primary'"
+          :sent="isIncoming(message.senderName)"
         >
         </q-chat-message>
         <unsent-message
@@ -21,7 +21,7 @@
       </div>
     </q-scroll-area>
     <command-line
-      :send-message="addMessage"
+      :send-message="sendMessage"
       @input="handleIsTyping"
     ></command-line>
   </q-page>
@@ -30,9 +30,8 @@
 <script lang="ts">
 import CommandLine from 'src/components/CommandLine.vue';
 import UnsentMessage from 'src/components/UnsentMessage.vue';
-import { SerializedMessage } from 'src/contracts';
 import { defineComponent } from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 type TypingMessage = {
   sender: string;
@@ -54,18 +53,16 @@ export default defineComponent({
     },
     computed: {
         ...mapGetters('channels', ['currentMessages']),
+        ...mapGetters('auth', ['username']),
         channelName() {
             return decodeURIComponent(this.$route.query.name as string);
         },
-        username(): string {
-            return this.$store.getters.username;
-        },
-    },
-    setup() {
-        const { NEW_MESSAGE } = mapMutations('channels', ['NEW_MESSAGE'])
-        return {NEW_MESSAGE}
+        activeChannel () {
+        return this.$store.state.channels.active
+        }
     },
     methods: {
+        ...mapActions('channels', ['addMessage']),
         handleIsTyping(event: InputEvent) {
             // toto hadze chyby ale funguje to.. preco?
             const value = (event.target as HTMLInputElement).value.trim();
@@ -90,7 +87,8 @@ export default defineComponent({
             }
         },
 
-        addMessage(content: string) {
+        // toto by bolo fajn presunut do command line
+        sendMessage(content: string) {
             const unsentMessageIndex = this.isTypingMessages.findIndex(
             (m) => m.sender === this.username
             )
@@ -98,19 +96,15 @@ export default defineComponent({
             if (unsentMessageIndex !== -1)
                 this.isTypingMessages.splice(unsentMessageIndex, 1)
 
-            const message: SerializedMessage = {
-                sender: this.username,
-                content: content,
-                channelId: 'channelID',
-                isIncoming: false,
-                createdAt: 'date',
-                id: 'messageid'
-            }
-            this.NEW_MESSAGE({
-                channel: this.channelName,
-                message: message
+            this.addMessage({
+                channel: this.activeChannel,
+                message: content
             })
 
+        },
+
+        isIncoming(senderName: string) {
+            return senderName === this.username
         }
     },
 });

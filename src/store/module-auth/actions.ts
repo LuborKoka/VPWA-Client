@@ -11,10 +11,9 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
         commit('AUTH_START')
         const user = await authService.me()
         //toto bude fungovat az po funkcnom logine zrejme
-        /* if (user?.id !== state.user?.id) {
-            console.log('this is happening')
+        if (user?.id !== state.user?.id) {
             await dispatch('channels/join', 'General', { root: true })
-        }*/
+        }
         commit('AUTH_SUCCESS', user)
         return user !== null
     } catch (err) {
@@ -47,10 +46,11 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
       throw err
     }
   },
-  async logout ({ commit }) {
+  async logout ({ commit, dispatch }) {
     try {
       commit('AUTH_START')
       await authService.logout()
+      await dispatch('channels/leave', null, { root: true })
       commit('AUTH_SUCCESS', null)
       // remove api token and notify listeners
       authManager.removeToken()
