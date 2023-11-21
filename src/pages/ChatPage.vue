@@ -41,31 +41,29 @@ type TypingMessage = {
 
 
 export default defineComponent({
-  components: {
-    CommandLine,
-    UnsentMessage,
-  },
+    components: {
+        CommandLine,
+        UnsentMessage,
+    },
     data() {
         return {
-        newMessage: '',
-        isTypingMessages: [] as TypingMessage[]
+            newMessage: '',
+            isTypingMessages: [] as TypingMessage[]
         };
     },
     computed: {
         ...mapGetters('channels', ['currentMessages']),
         ...mapGetters('auth', ['username']),
-        channelName() {
-            return decodeURIComponent(this.$route.query.name as string);
-        },
         activeChannel () {
         return this.$store.state.channels.active
         }
     },
     methods: {
         ...mapActions('channels', ['addMessage']),
+
         handleIsTyping(event: InputEvent) {
             // toto hadze chyby ale funguje to.. preco?
-            const value = (event.target as HTMLInputElement).value.trim();
+            const value = (event.target as HTMLInputElement).value.trim()
 
             const messageIndex = this.isTypingMessages.findIndex(
                 (m) => m.sender === this.username

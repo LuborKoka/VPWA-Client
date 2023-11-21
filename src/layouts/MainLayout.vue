@@ -27,9 +27,9 @@
           <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
               <channel-nav
-                v-for="channel in public"
-                :title="channel.title"
-                :key="channel.title"
+                v-for="channel in channels.filter(c => !c.isPrivate)"
+                :title="channel.name"
+                :key="channel.name"
               ></channel-nav>
             </div>
           </q-scroll-area>
@@ -43,9 +43,9 @@
           <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
               <channel-nav
-                v-for="channel in private"
-                :title="channel.title"
-                :key="channel.title"
+                v-for="channel in channels.filter(c => c.isPrivate)"
+                :title="channel.name"
+                :key="channel.name"
               ></channel-nav>
             </div>
           </q-scroll-area>
@@ -87,72 +87,50 @@ import { ref, defineComponent } from 'vue';
 import ChannelNav from 'src/components/ChannelNav.vue';
 import AvailableUser from 'src/components/AvailableUser.vue';
 import AccountOptions from 'src/components/AccountOptions.vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
-  components: {
-    ChannelNav,
-    AvailableUser,
-    AccountOptions,
-  },
-  computed: {
-    channelName() {
-      return decodeURIComponent(this.$route.query.name);
+    components: {
+        ChannelNav,
+        AvailableUser,
+        AccountOptions,
     },
-  },
-  data() {
-    return {
-      public: [
-        { title: 'General' },
-        { title: 'XDDD' },
-        { title: 'Channel 1' },
-        { title: 'Channel 2' },
-        { title: 'Public channel' },
-      ],
-      private: [
-        { title: 'Private 1' },
-        { title: 'Private 2' },
-        { title: 'Private 3' },
-      ],
-    };
-  },
-  setup() {
+    computed: {
+        ...mapGetters('auth', ['channels']),
+        channelName() {
+            return decodeURIComponent(this.$route.query.name);
+        },
+    },
+    setup() {
+        const cursorPosition = ref({ x: 0, y: 0 });
 
+        const delay = 5000;
+        const leftDrawerOpen = ref(false);
+        const rightDrawerOpen = ref(false);
 
-    const cursorPosition = ref({ x: 0, y: 0 });
+        const toggleLeftDrawer = () => {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+        };
 
-    const updateCursorPosition = (event) => {
-      cursorPosition.value = { x: event.clientX, y: event.clientY };
-    };
+        const toggleRightDrawer = () => {
+        rightDrawerOpen.value = !rightDrawerOpen.value;
+        };
 
-    const delay = 5000;
-    const leftDrawerOpen = ref(false);
-    const rightDrawerOpen = ref(false);
-
-    const toggleLeftDrawer = () => {
-      leftDrawerOpen.value = !leftDrawerOpen.value;
-    };
-
-    const toggleRightDrawer = () => {
-      rightDrawerOpen.value = !rightDrawerOpen.value;
-    };
-
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer,
-      rightDrawerOpen,
-      toggleRightDrawer,
-      cursorPosition,
-      updateCursorPosition,
-      showUserProfile: false,
-      userProfile: {},
-      users: [
-        { username: 'Peter Paprika', status: 'online' },
-        { username: 'Štefan Nátierka', status: 'dnd' },
-        { username: 'Michal Panvica', status: 'offline' },
-      ],
-      delay,
-    };
-  },
+        return {
+        leftDrawerOpen,
+        toggleLeftDrawer,
+        rightDrawerOpen,
+        toggleRightDrawer,
+        cursorPosition,
+        showUserProfile: false,
+        users: [
+            { username: 'Peter Paprika', status: 'online' },
+            { username: 'Štefan Nátierka', status: 'dnd' },
+            { username: 'Michal Panvica', status: 'offline' },
+        ],
+        delay,
+        };
+    },
 
 
 });

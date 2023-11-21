@@ -9,6 +9,10 @@ const getters: GetterTree<AuthStateInterface, StateInterface> = {
 
   username (context) {
     return context.user?.username
+  },
+
+  channels(context) {
+    return context.user?.channels
   }
 }
 

@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 export default defineComponent({
   name: 'ChannelNav',
   props: {
@@ -25,9 +25,11 @@ export default defineComponent({
   },
   methods: {
     ...mapMutations('channels', ['SET_ACTIVE']),
+    ...mapActions('channels', ['join']),
 
     setActiveChannel() {
         this.SET_ACTIVE(this.title)
+        this.join(this.title)
     }
   }
 });

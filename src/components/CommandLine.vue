@@ -16,44 +16,40 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useRoute } from 'vue-router';
 
 export default defineComponent({
     name: 'CommandLine',
     props: {
         sendMessage: {
-        type: Function,
-        required: true,
-        },
-    },
-    methods: {
-        focusInput() {
-        (this.$refs.input as HTMLInputElement).focus();
+            type: Function,
+            required: true,
         },
     },
     setup(props, { emit }) {
         const newMessage = ref('');
-        const route = useRoute();
 
         function handleInput() {
             emit('input');
         }
 
-        function submitMessage() {
-            if (newMessage.value.trim() !== '') {
-                const channelName = decodeURIComponent(
-                route.query.name as string
-                );
-                props.sendMessage(newMessage.value.trim(), channelName);
-                newMessage.value = '';
-            }
-        }
-
         return {
             newMessage,
-            submitMessage,
             handleInput,
         };
+    },
+    methods: {
+        focusInput() {
+            (this.$refs.input as HTMLInputElement).focus()
+        },
+
+        submitMessage() {
+            if (this.newMessage.trim() !== '') {
+                const channelName = decodeURIComponent(this.$route.query.name as string)
+                this.sendMessage(this.newMessage.trim(), channelName)
+
+                this.newMessage = ''
+            }
+        }
     },
 });
 </script>
