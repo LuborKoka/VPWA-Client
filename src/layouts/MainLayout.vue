@@ -61,7 +61,7 @@
 
       <available-user
 
-        v-for="user in users"
+        v-for="user in currentMembers"
 
         :key="user.username"
         :username="user.username"
@@ -97,6 +97,7 @@ export default defineComponent({
     },
     computed: {
         ...mapGetters('auth', ['channels']),
+        ...mapGetters('channels', ['currentMembers']),
         channelName() {
             return decodeURIComponent(this.$route.query.name);
         },

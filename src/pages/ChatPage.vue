@@ -64,6 +64,9 @@ export default defineComponent({
         handleIsTyping(event: InputEvent) {
             // toto hadze chyby ale funguje to.. preco?
             const value = (event.target as HTMLInputElement).value.trim()
+            console.log(event)
+
+            if ( value.startsWith('/') ) return
 
             const messageIndex = this.isTypingMessages.findIndex(
                 (m) => m.sender === this.username

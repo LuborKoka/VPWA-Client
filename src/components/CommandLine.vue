@@ -25,6 +25,11 @@ export default defineComponent({
             required: true,
         },
     },
+    computed: {
+        channelName(): string {
+            return decodeURIComponent(this.$route.query.name as string)
+        }
+    },
     setup(props, { emit }) {
         const newMessage = ref('');
 
@@ -43,7 +48,14 @@ export default defineComponent({
         },
 
         submitMessage() {
-            if (this.newMessage.trim() !== '') {
+            const value = this.newMessage.trim()
+            if ( value === '/list' ) {
+                this.$store.dispatch('channels/addMembers', this.channelName)
+                this.newMessage = ''
+                return
+            }
+
+            if (value !== '') {
                 const channelName = decodeURIComponent(this.$route.query.name as string)
                 this.sendMessage(this.newMessage.trim(), channelName)
 

@@ -14,6 +14,9 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
       const messages = context.messages[channel]
       return messages.length > 0 ? messages[messages.length - 1] : null
     }
+  },
+  currentMembers(context) {
+    return context.active !== null ? context.members[context.active] : []
   }
 }
 
