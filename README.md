@@ -21,11 +21,11 @@ Joins a public channel if not a member already or creates a new channel
 Syntax:
 
 ```bash
-/join [options] <channelName>
+/join [<channel_name>] [options]
 ```
 
 Options:
-- `-p`: Create a public channel
+- `-p`: Create a private channel
 
 
 

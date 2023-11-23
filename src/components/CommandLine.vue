@@ -15,8 +15,10 @@
 </template>
 
 <script lang="ts">
-import { authService, channelService } from 'src/services';
+import { SerializedChannel } from 'src/contracts/Channels';
+import { channelService } from 'src/services';
 import { defineComponent, ref } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
     name: 'CommandLine',
@@ -25,6 +27,9 @@ export default defineComponent({
             type: Function,
             required: true,
         },
+    },
+    computed: {
+        ...mapGetters('auth', ['channels', 'username'])
     },
     setup(props, { emit }) {
         const newMessage = ref('');
@@ -63,21 +68,36 @@ export default defineComponent({
 
         async handleCommand(command: string, channelName: string) {
             channelName = encodeURIComponent(channelName)
-            switch(command) {
+            const commands = command.split(' ')
+
+            switch(commands[0]) {
                 case '/list':
                     this.$store.dispatch('channels/getMembers', channelName)
                     return
                 case '/join':
+                    const channels = this.channels as SerializedChannel[]
+
+
+                    let channel = channels.find(c => c.name === channelName)
                     //join public channel
-                    const me = await authService.me()
-                    if ( !me ) return
-                    console.log(me.username)
-                    const channel = me?.channels.find(c => c.name === channelName)
-                    if ( channel?.isMember === false ) {
+                    if ( channel && channel.isMember === false ) {
                         const channelSocket = await channelService.join(channelName)
-                        channelSocket.joinNewChannel(me.username)
+                        channelSocket.joinNewChannel(this.username)
                         channel.isMember = true
+                        return
                     }
+                    const newChannelName = commands[1]
+                    channel = channels.find(c => c.name === newChannelName)
+                    //create a new channel
+                    if ( !channel || channel.isMember === false ) {
+                        const socket = channelService.join(newChannelName)
+                        const isPrivate = commands.at(-1) === '-p'
+
+                        const newChannel = await socket.createChannel(this.username, isPrivate)
+
+                        this.$store.commit('auth/ADD_CHANNEL', newChannel)
+                    }
+
             }
         }
     },

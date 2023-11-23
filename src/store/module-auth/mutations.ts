@@ -1,6 +1,7 @@
 import { User } from 'src/contracts'
 import { MutationTree } from 'vuex'
 import { AuthStateInterface } from './state'
+import { SerializedChannel } from 'src/contracts/Channels'
 
 const mutations: MutationTree<AuthStateInterface> = {
   AUTH_START (state) {
@@ -14,6 +15,9 @@ const mutations: MutationTree<AuthStateInterface> = {
   AUTH_ERROR (state, errors) {
     state.status = 'error'
     state.errors = errors
+  },
+  ADD_CHANNEL(state, channel: SerializedChannel) {
+    state.user?.channels.push(channel)
   }
 }
 

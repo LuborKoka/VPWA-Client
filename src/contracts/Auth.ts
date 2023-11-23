@@ -1,3 +1,5 @@
+import { SerializedChannel } from './Channels'
+
 export interface ApiToken {
   type: 'bearer'
   token: string
@@ -23,5 +25,5 @@ export interface User {
     isMuted: boolean,
     username: string,
     status: string,
-    channels: []
+    channels: SerializedChannel[]
 }

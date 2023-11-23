@@ -1,6 +1,6 @@
 import { RawMessage, SerializedMessage } from 'src/contracts'
 import { BootParams, SocketManager } from './SocketManager'
-import { ChannelMember } from 'src/contracts/Channels'
+import { ChannelMember, SerializedChannel } from 'src/contracts/Channels'
 
 // creating instance of this class automatically connects to given socket.io namespace
 // subscribe is called with boot params, so you can use it to dispatch actions for socket events
@@ -28,6 +28,10 @@ class ChannelSocketManager extends SocketManager {
 
     public joinNewChannel(username: string): Promise<boolean> {
         return this.emitAsync('joinChannel', username)
+    }
+
+    public createChannel(username: string, isPrivate: boolean): Promise<SerializedChannel> {
+        return this.emitAsync('createChannel', username, isPrivate)
     }
 }
 

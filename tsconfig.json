@@ -1,6 +1,7 @@
 {
   "extends": "@quasar/app-webpack/tsconfig-preset",
   "compilerOptions": {
+    "lib": ["es2022", "dom"] ,// Add "es2022" or a later version
     "baseUrl": "."
   }
 }
