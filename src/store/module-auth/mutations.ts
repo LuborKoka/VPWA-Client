@@ -18,6 +18,12 @@ const mutations: MutationTree<AuthStateInterface> = {
   },
   ADD_CHANNEL(state, channel: SerializedChannel) {
     state.user?.channels.push(channel)
+  },
+  REMOVE_CHANNEL(state, channelName) {
+    const channels = state.user?.channels || []
+    const index = channels?.findIndex(c => c.name === channelName)
+
+    channels?.splice(index, 1)
   }
 }
 

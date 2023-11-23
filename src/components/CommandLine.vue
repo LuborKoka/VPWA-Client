@@ -67,6 +67,12 @@ export default defineComponent({
 
 
         async handleCommand(command: string, channelName: string) {
+            /**
+             * @param channelName
+             *      the name of the current channel, encodeURIComponent is called inside this function
+             *
+             */
+
             channelName = encodeURIComponent(channelName)
             const commands = command.split(' ')
 
@@ -97,6 +103,18 @@ export default defineComponent({
 
                         this.$store.commit('auth/ADD_CHANNEL', newChannel)
                     }
+                    return
+
+
+                case '/quit':
+                    const socketToDelete = channelService.in(channelName)
+                    const success = await socketToDelete?.deleteChannel(this.username)
+
+                    if ( success === true ) {
+                        channelService.leave(channelName)
+                        this.$store.commit('auth/REMOVE_CHANNEL', channelName)
+                    }
+                    return
 
             }
         }

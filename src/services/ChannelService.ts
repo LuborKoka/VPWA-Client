@@ -33,6 +33,10 @@ class ChannelSocketManager extends SocketManager {
     public createChannel(username: string, isPrivate: boolean): Promise<SerializedChannel> {
         return this.emitAsync('createChannel', username, isPrivate)
     }
+
+    public deleteChannel(username: string): Promise<boolean> {
+        return this.emitAsync('deleteChannel', username)
+    }
 }
 
 class ChannelService {
