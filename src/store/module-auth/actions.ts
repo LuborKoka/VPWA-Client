@@ -7,58 +7,58 @@ import { LoginCredentials, RegisterData } from 'src/contracts'
 const actions: ActionTree<AuthStateInterface, StateInterface> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async check ({ state, commit, dispatch }) {
-    try {
-        commit('AUTH_START')
-        const user = await authService.me()
-        //toto bude fungovat az po funkcnom logine zrejme
-        if (user?.id !== state.user?.id) {
-            await dispatch('channels/join', 'General', { root: true })
+        try {
+            commit('AUTH_START')
+            const user = await authService.me()
+            //toto bude fungovat az po funkcnom logine zrejme
+            if (user?.id !== state.user?.id) {
+                await dispatch('channels/join', 'General', { root: true })
+            }
+            commit('AUTH_SUCCESS', user)
+            return user !== null
+        } catch (err) {
+            commit('AUTH_ERROR', err)
+            throw err
         }
-        commit('AUTH_SUCCESS', user)
-        return user !== null
-    } catch (err) {
-        commit('AUTH_ERROR', err)
-        throw err
-    }
-  },
-  async register ({ commit }, form: RegisterData) {
-    try {
+    },
+    async register ({ commit }, form: RegisterData) {
+        try {
+            commit('AUTH_START')
+            const user = await authService.register(form)
+            commit('AUTH_SUCCESS', null)
+            return user
+        } catch (err) {
+            commit('AUTH_ERROR', err)
+            console.log(err)
+            throw err
+        }
+    },
+    async login ({ commit }, credentials: LoginCredentials) {
+        try {
         commit('AUTH_START')
-        const user = await authService.register(form)
+        const apiToken = await authService.login(credentials)
         commit('AUTH_SUCCESS', null)
-        return user
-    } catch (err) {
+        // save api token to local storage and notify listeners
+        authManager.setToken(apiToken.token)
+        return apiToken
+        } catch (err) {
         commit('AUTH_ERROR', err)
-        console.log(err)
         throw err
+        }
+    },
+    async logout ({ commit, dispatch }) {
+        try {
+        commit('AUTH_START')
+        await authService.logout()
+        await dispatch('channels/leave', null, { root: true })
+        commit('AUTH_SUCCESS', null)
+        // remove api token and notify listeners
+        authManager.removeToken()
+        } catch (err) {
+        commit('AUTH_ERROR', err)
+        throw err
+        }
     }
-  },
-  async login ({ commit }, credentials: LoginCredentials) {
-    try {
-      commit('AUTH_START')
-      const apiToken = await authService.login(credentials)
-      commit('AUTH_SUCCESS', null)
-      // save api token to local storage and notify listeners
-      authManager.setToken(apiToken.token)
-      return apiToken
-    } catch (err) {
-      commit('AUTH_ERROR', err)
-      throw err
-    }
-  },
-  async logout ({ commit, dispatch }) {
-    try {
-      commit('AUTH_START')
-      await authService.logout()
-      await dispatch('channels/leave', null, { root: true })
-      commit('AUTH_SUCCESS', null)
-      // remove api token and notify listeners
-      authManager.removeToken()
-    } catch (err) {
-      commit('AUTH_ERROR', err)
-      throw err
-    }
-  }
 }
 
 export default actions

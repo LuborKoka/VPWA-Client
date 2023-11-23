@@ -23,7 +23,11 @@ class ChannelSocketManager extends SocketManager {
     }
 
     public loadMembers(): Promise<ChannelMember[]> {
-        return this.emitAsync('getMembers')
+        return this.emitAsync('loadMembers')
+    }
+
+    public joinNewChannel(username: string): Promise<boolean> {
+        return this.emitAsync('joinChannel', username)
     }
 }
 

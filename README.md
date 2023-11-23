@@ -3,6 +3,33 @@
 - Lubor Koka
 
 
+
+## Command line commands
+
+#### List
+Lists all members of the active channel
+
+Syntax:
+
+```bash
+/list
+```
+
+#### Join
+Joins a public channel if not a member already or creates a new channel
+
+Syntax:
+
+```bash
+/join [options] <channelName>
+```
+
+Options:
+- `-p`: Create a public channel
+
+
+
+
 # Quasar App (quasar-project)
 
 A Quasar Project

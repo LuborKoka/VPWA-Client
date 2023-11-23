@@ -17,7 +17,8 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
   },
   currentMembers(context) {
     return context.active !== null ? context.members[context.active] : []
-  }
+  },
+
 }
 
 export default getters

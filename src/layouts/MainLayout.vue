@@ -28,7 +28,7 @@
             <div class="infinite-scroller">
               <channel-nav
                 v-for="channel in channels.filter(c => !c.isPrivate)"
-                :title="channel.name"
+                :title="decodeURIComponent(channel.name)"
                 :key="channel.name"
               ></channel-nav>
             </div>
@@ -44,7 +44,7 @@
             <div class="infinite-scroller">
               <channel-nav
                 v-for="channel in channels.filter(c => c.isPrivate)"
-                :title="channel.name"
+                :title="decodeURIComponent(channel.name)"
                 :key="channel.name"
               ></channel-nav>
             </div>

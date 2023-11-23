@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts">
+import { authService, channelService } from 'src/services';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -24,11 +25,6 @@ export default defineComponent({
             type: Function,
             required: true,
         },
-    },
-    computed: {
-        channelName(): string {
-            return decodeURIComponent(this.$route.query.name as string)
-        }
     },
     setup(props, { emit }) {
         const newMessage = ref('');
@@ -49,21 +45,45 @@ export default defineComponent({
 
         submitMessage() {
             const value = this.newMessage.trim()
-            if ( value === '/list' ) {
-                this.$store.dispatch('channels/addMembers', this.channelName)
+            const channelName = decodeURIComponent(this.$route.query.name as string)
+            if ( value.startsWith('/') ) {
+                this.handleCommand(value, channelName)
                 this.newMessage = ''
                 return
             }
 
             if (value !== '') {
-                const channelName = decodeURIComponent(this.$route.query.name as string)
+
                 this.sendMessage(this.newMessage.trim(), channelName)
 
                 this.newMessage = ''
             }
+        },
+
+
+        async handleCommand(command: string, channelName: string) {
+            channelName = encodeURIComponent(channelName)
+            switch(command) {
+                case '/list':
+                    this.$store.dispatch('channels/getMembers', channelName)
+                    return
+                case '/join':
+                    //join public channel
+                    const me = await authService.me()
+                    if ( !me ) return
+                    console.log(me.username)
+                    const channel = me?.channels.find(c => c.name === channelName)
+                    if ( channel?.isMember === false ) {
+                        const channelSocket = await channelService.join(channelName)
+                        channelSocket.joinNewChannel(me.username)
+                        channel.isMember = true
+                    }
+            }
         }
     },
 });
+
+
 </script>
 
 <style lang="scss" scoped>

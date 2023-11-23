@@ -27,7 +27,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     const newMessage = await channelService.in(channel)?.addMessage(message)
     commit('NEW_MESSAGE', { channel, message: newMessage })
   },
-  async addMembers({ commit }, channel: string) {
+  async getMembers({ commit }, channel: string) {
     const members = await channelService.in(channel)?.loadMembers()
     commit('SET_MEMBERS', { channel, members})
   }

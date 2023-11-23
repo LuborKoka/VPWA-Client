@@ -28,8 +28,8 @@ export default defineComponent({
     ...mapActions('channels', ['join']),
 
     setActiveChannel() {
-        this.SET_ACTIVE(this.title)
-        this.join(this.title)
+        this.SET_ACTIVE(encodeURIComponent(this.title))
+        this.join(encodeURIComponent(this.title))
     }
   }
 });
