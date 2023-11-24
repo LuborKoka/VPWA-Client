@@ -18,35 +18,35 @@
 import { SerializedChannel } from 'src/contracts/Channels';
 import { channelService } from 'src/services';
 import { defineComponent, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default defineComponent({
     name: 'CommandLine',
-    props: {
-        sendMessage: {
-            type: Function,
-            required: true,
-        },
-    },
     computed: {
         ...mapGetters('auth', ['channels', 'username'])
     },
-    setup(props, { emit }) {
+    setup() {
         const newMessage = ref('');
-
-        function handleInput() {
-            emit('input');
-        }
-
         return {
             newMessage,
-            handleInput,
         };
     },
     methods: {
+        ...mapActions('channels', ['addMessage']),
+
         focusInput() {
             (this.$refs.input as HTMLInputElement).focus()
         },
+
+        handleInput() {
+            const value = this.newMessage.trim()
+            // if is command
+            if ( value.startsWith('/') ) return
+
+            const channelName = decodeURIComponent(this.$route.query.name as string)
+            channelService.in(channelName)?.unsentMessage(value)
+        },
+
 
         submitMessage() {
             const value = this.newMessage.trim()
@@ -58,8 +58,10 @@ export default defineComponent({
             }
 
             if (value !== '') {
-
-                this.sendMessage(this.newMessage.trim(), channelName)
+                this.addMessage({
+                    channel: channelName,
+                    message: value
+                })
 
                 this.newMessage = ''
             }

@@ -1,4 +1,4 @@
-import { SerializedMessage } from 'src/contracts'
+import { SerializedMessage, UnsentMessage } from 'src/contracts'
 import { ChannelMember } from 'src/contracts/Channels'
 
 export interface ChannelsStateInterface {
@@ -6,6 +6,7 @@ export interface ChannelsStateInterface {
   error: Error | null,
   messages: { [channel: string]: SerializedMessage[] },
   members: { [channel: string]: ChannelMember[]},
+  someoneIsTypingMessages: { [channel: string]: UnsentMessage[] },
   active: string | null
 }
 
@@ -15,6 +16,7 @@ function state (): ChannelsStateInterface {
     error: null,
     messages: {},
     members: {},
+    someoneIsTypingMessages: {},
     active: null
   }
 }

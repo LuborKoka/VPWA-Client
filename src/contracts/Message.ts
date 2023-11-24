@@ -7,3 +7,8 @@ export interface SerializedMessage {
     createdAt: string,
     id: string
 }
+
+export type UnsentMessage = {
+    sender: string,
+    content: string
+}

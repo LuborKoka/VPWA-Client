@@ -1,4 +1,4 @@
-import { RawMessage, SerializedMessage } from 'src/contracts'
+import { RawMessage, SerializedMessage, UnsentMessage } from 'src/contracts'
 import { BootParams, SocketManager } from './SocketManager'
 import { ChannelMember, SerializedChannel } from 'src/contracts/Channels'
 
@@ -10,12 +10,29 @@ class ChannelSocketManager extends SocketManager {
         const channel = this.namespace.split('/').pop() as string
 
         this.socket.on('message', (message: SerializedMessage) => {
-        store.commit('channels/NEW_MESSAGE', { channel, message })
+            store.commit('channels/NEW_MESSAGE', { channel, message })
+            const unsentMessage: UnsentMessage = {
+                sender: message.senderName,
+                content: message.content
+            }
+            console.log(unsentMessage)
+            store.commit('channels/DELETE_UNSENT_MESSAGE', { channel, message: unsentMessage })
+        })
+
+
+        this.socket.on('unsentMessage', (message: UnsentMessage) => {
+            message.content === '' ?
+                store.commit('channels/DELETE_UNSENT_MESSAGE', { channel, message }) :
+                store.commit('channels/NEW_UNSENT_MESSAGE', {channel, message})
         })
     }
 
     public addMessage (message: RawMessage): Promise<SerializedMessage> {
         return this.emitAsync('addMessage', message)
+    }
+
+    public unsentMessage (message: string): Promise<unknown> {
+        return this.emitAsync('unsentMessage', message)
     }
 
     public loadMessages (): Promise<SerializedMessage[]> {
