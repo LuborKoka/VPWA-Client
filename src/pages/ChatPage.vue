@@ -45,14 +45,21 @@ export default defineComponent({
         ...mapGetters('channels', ['currentMessages', 'unsentMessages']),
         ...mapGetters('auth', ['username']),
         activeChannel () {
-        return this.$store.state.channels.active
+            return this.$store.state.channels.active
         }
     },
     methods: {
-
         isIncoming(senderName: string) {
             return senderName === this.username
+        },
+        setActiveChannel(newRoute: string) {
+            this.$store.dispatch('channels/join', newRoute)
+            this.$store.commit('channels/SET_ACTIVE', newRoute)
         }
+    },
+    beforeRouteUpdate(to, from, next) {
+        this.setActiveChannel(to.query.name as string)
+        next()
     },
 });
 </script>
