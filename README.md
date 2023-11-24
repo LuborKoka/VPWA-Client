@@ -37,3 +37,32 @@ Syntax:
 ```bash
 /quit
 ```
+
+
+#### Cancel
+Cancels membership of the current user in the current channel. If the user is channel admin, the channel is deleted.
+
+Syntax:
+
+```bash
+/cancel
+```
+
+
+#### Invite
+Invites a user to a channel
+
+Syntax:
+
+```bash
+/invite <username>
+```
+
+#### Revoke
+Cancels a user's membership in a private channel
+
+Syntax:
+
+```bash
+/revoke <username>
+```

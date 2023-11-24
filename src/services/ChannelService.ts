@@ -37,6 +37,18 @@ class ChannelSocketManager extends SocketManager {
     public deleteChannel(username: string): Promise<boolean> {
         return this.emitAsync('deleteChannel', username)
     }
+
+    public quitChannel(username: string): Promise<boolean> {
+        return this.emitAsync('quitChannel', username)
+    }
+
+    public inviteToChannel(username: string, targetName: string): Promise<boolean> {
+        return this.emitAsync('inviteToChannel', username, targetName)
+    }
+
+    public revokeFromChannel(username: string, targetName: string): Promise<boolean> {
+        return this.emitAsync('revokeFromChannel', username, targetName)
+    }
 }
 
 class ChannelService {

@@ -16,21 +16,21 @@
 import { defineComponent } from 'vue';
 import { mapMutations, mapActions } from 'vuex';
 export default defineComponent({
-  name: 'ChannelNav',
-  props: {
-    title: {
-      type: String,
-      default: 'Channel Name',
+    name: 'ChannelNav',
+    props: {
+        title: {
+        type: String,
+        default: 'Channel Name',
+        },
     },
-  },
-  methods: {
-    ...mapMutations('channels', ['SET_ACTIVE']),
-    ...mapActions('channels', ['join']),
+    methods: {
+        ...mapMutations('channels', ['SET_ACTIVE']),
+        ...mapActions('channels', ['join']),
 
-    setActiveChannel() {
-        this.SET_ACTIVE(encodeURIComponent(this.title))
-        this.join(encodeURIComponent(this.title))
+        setActiveChannel() {
+            this.SET_ACTIVE(encodeURIComponent(this.title))
+            this.join(encodeURIComponent(this.title))
+        }
     }
-  }
 });
 </script>

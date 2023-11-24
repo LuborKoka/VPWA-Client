@@ -75,6 +75,7 @@ export default defineComponent({
 
             channelName = encodeURIComponent(channelName)
             const commands = command.split(' ')
+            let name: string
 
             switch(commands[0]) {
                 case '/list':
@@ -83,12 +84,13 @@ export default defineComponent({
                 case '/join':
                     const channels = this.channels as SerializedChannel[]
 
+                    let channel = channels.find(c => c.name === encodeURIComponent(channelName))
 
-                    let channel = channels.find(c => c.name === channelName)
+
                     //join public channel
-                    if ( channel && channel.isMember === false ) {
-                        const channelSocket = await channelService.join(channelName)
-                        channelSocket.joinNewChannel(this.username)
+                    if ( channel && channel.isMember === false && commands[1] === undefined ) {//neviem, ci realne potrebujem ten treti check, ale whatever.
+                        const channelSocket = await channelService.in(channelName)
+                        channelSocket?.joinNewChannel(this.username)
                         channel.isMember = true
                         return
                     }
@@ -107,8 +109,7 @@ export default defineComponent({
 
 
                 case '/quit':
-                    const socketToDelete = channelService.in(channelName)
-                    const success = await socketToDelete?.deleteChannel(this.username)
+                    const success = await channelService.in(channelName)?.deleteChannel(this.username)
 
                     if ( success === true ) {
                         channelService.leave(channelName)
@@ -116,6 +117,22 @@ export default defineComponent({
                     }
                     return
 
+                case '/cancel':
+                    const deleteChannel = await channelService.in(channelName)?.quitChannel(this.username)
+                    channelService.leave(channelName)
+                    if ( deleteChannel === true )
+                        this.$store.commit('auth/REMOVE_CHANNEL', channelName)
+                    return
+
+                case '/invite':
+                    name = command.split(' ').slice(1).join(' ')
+                    await channelService.in(channelName)?.inviteToChannel(this.username, name)
+                    return
+
+                case '/revoke':
+                    name = command.split(' ').slice(1).join(' ')
+                    await channelService.in(channelName)?.revokeFromChannel(this.username, name)
+                    return
             }
         }
     },

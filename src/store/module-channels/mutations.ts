@@ -20,7 +20,7 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     state.active = null
     delete state.messages[channel]
   },
-  SET_ACTIVE (state, channel: string) { //how do i call this mutation?
+  SET_ACTIVE (state, channel: string) {
     state.active = channel
   },
   NEW_MESSAGE (state, { channel, message }: { channel: string, message: SerializedMessage }) {
