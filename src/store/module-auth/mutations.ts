@@ -1,7 +1,7 @@
 import { User } from 'src/contracts'
 import { MutationTree } from 'vuex'
 import { AuthStateInterface } from './state'
-import { SerializedChannel } from 'src/contracts/Channels'
+import { SerializedChannel, Invite } from 'src/contracts/Channels'
 
 const mutations: MutationTree<AuthStateInterface> = {
   AUTH_START (state) {
@@ -24,6 +24,15 @@ const mutations: MutationTree<AuthStateInterface> = {
     const index = channels?.findIndex(c => c.name === channelName)
 
     channels?.splice(index, 1)
+  },
+  REMOVE_INVITE(state, channelName) {
+    const invites = state.user?.invitations
+    const index = invites?.findIndex(i => i.channelName === channelName)
+    if ( index !== -1 && index !== undefined )
+        invites?.splice(index, 1)
+  },
+  ADD_INVITE(state, invite: Invite) {
+    state.user?.invitations.splice(0, 0, invite)
   }
 }
 

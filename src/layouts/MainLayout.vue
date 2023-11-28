@@ -29,6 +29,7 @@
                 <channel-invitation
                     v-for="inv in invitations.filter(i => !i.isPrivate)"
                     :title="inv.channelName"
+                    :id="inv.id"
                     :key="inv.channelName"
                 ></channel-invitation>
                 <channel-nav
@@ -50,6 +51,7 @@
                 <channel-invitation
                     v-for="inv in invitations.filter(i => i.isPrivate)"
                     :title="inv.channelName"
+                    :id="inv.id"
                     :key="inv.channelName"
                 ></channel-invitation>
                 <channel-nav

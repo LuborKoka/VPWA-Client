@@ -4,18 +4,19 @@
         Invitation: {{ title }}
       </q-item-section>
       <q-item-section side>
-        <q-icon name="check" class="text-green cursor-pointer icon"/>
+        <q-icon @click="accept" name="check" class="text-green cursor-pointer icon"/>
       </q-item-section>
       <q-item-section side>
-        <q-icon name="close" class="text-red cursor-pointer icon"/>
+        <q-icon @click="decline" name="close" class="text-red cursor-pointer icon"/>
       </q-item-section>
     </q-item>
-  </template>
+</template>
 
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+import { channelService } from 'src/services';
+import { mapMutations } from 'vuex';
 
 export default defineComponent({
     name: 'ChannelInvitation',
@@ -23,6 +24,30 @@ export default defineComponent({
         title: {
             type: String,
             default: 'Channel Name'
+        },
+        id: {
+            type: String,
+            required: true
+        }
+    },
+    methods: {
+        ...mapMutations('auth', ['ADD_CHANNEL', 'REMOVE_CHANNEL', 'REMOVE_INVITE']),
+        async accept() {
+            const res = await channelService.join(encodeURIComponent(this.title)).handleInvite(this.id, true)
+            console.log(res)
+            if ( res !== null ) {
+                this.ADD_CHANNEL(res)
+                this.REMOVE_INVITE(this.title)
+            }
+        },
+        async decline() {
+            const name = encodeURIComponent(this.title)
+            const res = await channelService.join(name).handleInvite(this.id, false)
+            if ( res === true ) {
+                channelService.leave(name)
+                this.REMOVE_CHANNEL(name)
+                this.REMOVE_INVITE(this.title)
+            }
         }
     }
 })

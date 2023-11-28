@@ -10,3 +10,11 @@ export type SerializedChannel = {
     isPrivate: boolean,
     isMember: boolean
 }
+
+
+export type Invite = {
+    id: string,
+    createdAt: string,
+    channelName: string,
+    isPrivate: boolean
+}
