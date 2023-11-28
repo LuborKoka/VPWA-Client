@@ -96,7 +96,9 @@ export default defineComponent({
                         channel.isMember = true
                         return
                     }
-                    const newChannelName = commands[1]
+                    const newChannelName = commands.at(-1) === '-p' ?
+                        encodeURIComponent(commands.slice(1, -1).join(' ')) :
+                        encodeURIComponent(commands.slice(1).join(' '))
                     channel = channels.find(c => c.name === newChannelName)
                     //create a new channel
                     if ( !channel || channel.isMember === false ) {
