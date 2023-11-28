@@ -15,7 +15,6 @@ class ChannelSocketManager extends SocketManager {
                 sender: message.senderName,
                 content: message.content
             }
-            console.log(unsentMessage)
             store.commit('channels/DELETE_UNSENT_MESSAGE', { channel, message: unsentMessage })
         })
 

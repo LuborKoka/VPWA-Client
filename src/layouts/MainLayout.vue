@@ -26,11 +26,11 @@
           </q-card>
           <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
-              <channel-nav
-                v-for="channel in channels.filter(c => !c.isPrivate)"
-                :title="decodeURIComponent(channel.name)"
-                :key="channel.name"
-              ></channel-nav>
+                <channel-nav
+                    v-for="channel in channels.filter(c => !c.isPrivate)"
+                    :title="decodeURIComponent(channel.name)"
+                    :key="channel.name"
+                ></channel-nav>
             </div>
           </q-scroll-area>
         </div>
@@ -87,6 +87,7 @@ import { ref, defineComponent } from 'vue';
 import ChannelNav from 'src/components/ChannelNav.vue';
 import AvailableUser from 'src/components/AvailableUser.vue';
 import AccountOptions from 'src/components/AccountOptions.vue';
+import ChannelInvitation from 'src/components/ChannelInvitation.vue';
 import { mapGetters } from 'vuex';
 
 export default defineComponent({
@@ -94,6 +95,7 @@ export default defineComponent({
         ChannelNav,
         AvailableUser,
         AccountOptions,
+        ChannelInvitation
     },
     computed: {
         ...mapGetters('auth', ['channels']),
