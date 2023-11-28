@@ -1,5 +1,5 @@
 import type { AxiosError, AxiosRequestConfig } from 'axios'
-import type { ApiToken, LoginCredentials, RegisterData, User } from 'src/contracts'
+import type { ApiToken, Invitation, LoginCredentials, RegisterData, User } from 'src/contracts'
 import { api } from 'src/boot/axios'
 
 type Channel = {
@@ -8,13 +8,15 @@ type Channel = {
     isMember: boolean
 }
 
+
 type Me = {
     username: string,
     id: string,
     status: string,
     isMuted: boolean,
     email: string,
-    channels: Channel[]
+    channels: Channel[],
+    invitations: Invitation[]
 }
 
 class AuthService {

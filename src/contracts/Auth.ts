@@ -19,11 +19,19 @@ export interface LoginCredentials {
   remember: boolean
 }
 
+export type Invitation = {
+    id: string,
+    channelName: string,
+    createdAt: string,
+    isPrivate: boolean
+}
+
 export interface User {
     id: string
     email: string
     isMuted: boolean,
     username: string,
     status: string,
-    channels: SerializedChannel[]
+    channels: SerializedChannel[],
+    invitations: Invitation[]
 }

@@ -26,6 +26,11 @@
           </q-card>
           <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
+                <channel-invitation
+                    v-for="inv in invitations.filter(i => !i.isPrivate)"
+                    :title="inv.channelName"
+                    :key="inv.channelName"
+                ></channel-invitation>
                 <channel-nav
                     v-for="channel in channels.filter(c => !c.isPrivate)"
                     :title="decodeURIComponent(channel.name)"
@@ -42,11 +47,16 @@
           </q-card>
           <q-scroll-area style="height: 100%">
             <div class="infinite-scroller">
-              <channel-nav
-                v-for="channel in channels.filter(c => c.isPrivate)"
-                :title="decodeURIComponent(channel.name)"
-                :key="channel.name"
-              ></channel-nav>
+                <channel-invitation
+                    v-for="inv in invitations.filter(i => i.isPrivate)"
+                    :title="inv.channelName"
+                    :key="inv.channelName"
+                ></channel-invitation>
+                <channel-nav
+                    v-for="channel in channels.filter(c => c.isPrivate)"
+                    :title="decodeURIComponent(channel.name)"
+                    :key="channel.name"
+                ></channel-nav>
             </div>
           </q-scroll-area>
         </div>
@@ -98,7 +108,7 @@ export default defineComponent({
         ChannelInvitation
     },
     computed: {
-        ...mapGetters('auth', ['channels']),
+        ...mapGetters('auth', ['channels', 'invitations']),
         ...mapGetters('channels', ['currentMembers']),
         channelName() {
             return decodeURIComponent(this.$route.query.name);
