@@ -43,14 +43,14 @@ export default defineComponent({
             // if is command
             if ( value.startsWith('/') ) return
 
-            const channelName = decodeURIComponent(this.$route.query.name as string)
+            const channelName = this.$route.query.name as string
             channelService.in(channelName)?.unsentMessage(value)
         },
 
 
         submitMessage() {
             const value = this.newMessage.trim()
-            const channelName = decodeURIComponent(this.$route.query.name as string)
+            const channelName = this.$route.query.name as string
             if ( value.startsWith('/') ) {
                 this.handleCommand(value, channelName)
                 this.newMessage = ''
@@ -85,12 +85,11 @@ export default defineComponent({
                     return
                 case '/join':
                     const channels = this.channels as SerializedChannel[]
-
-                    let channel = channels.find(c => c.name === encodeURIComponent(channelName))
-
+                    let channel = channels.find(c => c.name === channelName)
 
                     //join public channel
-                    if ( channel && channel.isMember === false && commands[1] === undefined ) {//neviem, ci realne potrebujem ten treti check, ale whatever.
+                    if ( channel && channel.isMember === false ) {
+                        console.log('but why???')
                         const channelSocket = await channelService.in(channelName)
                         channelSocket?.joinNewChannel(this.username)
                         channel.isMember = true
