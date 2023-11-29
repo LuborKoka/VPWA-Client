@@ -75,7 +75,6 @@ export default defineComponent({
              *
              */
 
-            channelName = encodeURIComponent(channelName)
             const commands = command.split(' ')
             let name: string
 
