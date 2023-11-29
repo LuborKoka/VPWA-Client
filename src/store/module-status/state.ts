@@ -1,5 +1,5 @@
 // module-status/state.ts
-import { UserStatus } from 'src/contracts/Users';
+
 
 export interface StatusStateInterface {
   id: number;
