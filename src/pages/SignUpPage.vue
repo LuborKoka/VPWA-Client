@@ -17,6 +17,10 @@
             type="text"
             label="Username"
             autofocus
+            :rules="[
+              (val) => val.length >= 4 || 'Please use minimum 4 characters',
+            ]"
+            lazy-rules
           />
           <q-input
             name="email"
@@ -24,14 +28,26 @@
             v-model.trim="form.email"
             type="email"
             label="Email"
+            :error="!isEmailValid"
+            @input="validateEmail"
+            :rules="[
+              (val) => isEmailValid || 'Email is not valid',
+            ]"
+            lazy-rules
           />
-          <q-input
+          <span v-if="!isEmailValid">Please enter a valid email address</span>
+
+           <q-input
             id="password"
             name="password"
             v-model="form.password"
             label="Password"
             :type="showPassword ? 'text' : 'password'"
             bottom-slots
+            :rules="[
+              (val) => val.length >= 8 || 'Please use minimum 8 characters',
+            ]"
+            lazy-rules
           >
             <template v-slot:append>
               <q-icon
@@ -48,6 +64,10 @@
             label="Confirm Password"
             :type="showPassword ? 'text' : 'password'"
             bottom-slots
+            :rules="[
+              (val) => val.length >= 8 || 'Please use minimum 8 characters',
+            ]"
+            lazy-rules
           >
             <template v-slot:append>
               <q-icon
@@ -83,7 +103,8 @@
       return {
         form: {username: '', email: '', password: '', passwordConfirmation: '' },
         showPassword: false,
-        API_URL: process.env.API_URL
+        API_URL: process.env.API_URL,
+        isEmailValid: true
       }
     },
     computed: {
@@ -101,7 +122,14 @@
         .then(() =>{
             this.$router.push(this.redirectTo)
         })
-      }
-    }
+      },
+
+      validateEmail() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.isEmailValid = emailRegex.test(this.form.email);
+    },
+    },
+    
+
   })
   </script>
