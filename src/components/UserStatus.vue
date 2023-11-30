@@ -24,7 +24,7 @@ import { ref, defineComponent } from 'vue';
 export default defineComponent({
   setup() {
     const statusItems = ref([
-      { label: 'Onlinerisko', color: 'green' },
+      { label: 'Online', color: 'green' },
       { label: 'Do Not Disturb', color: 'red' },
       { label: 'Offline', color: 'secondary' },
     ]);

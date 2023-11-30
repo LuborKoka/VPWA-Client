@@ -34,7 +34,6 @@ import { mapGetters } from 'vuex';
 export default defineComponent({
     components: {
         CommandLine,
-        
         UnsentMessage,
     },
     data() {
