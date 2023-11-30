@@ -30,13 +30,9 @@
             label="Email"
             :error="!isEmailValid"
             @input="validateEmail"
-            :rules="[
-              (val) => isEmailValid || 'Email is not valid',
-            ]"
-            lazy-rules
+            
           />
           <span v-if="!isEmailValid">Please enter a valid email address</span>
-
            <q-input
             id="password"
             name="password"
@@ -127,6 +123,7 @@
       validateEmail() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       this.isEmailValid = emailRegex.test(this.form.email);
+      return this.isEmailValid
     },
     },
     
