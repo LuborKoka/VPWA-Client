@@ -6,6 +6,8 @@ import auth from './module-auth'
 import type { AuthStateInterface } from './module-auth/state'
 import channels from './module-channels'
 import type { ChannelsStateInterface } from './module-channels/state'
+import status from './module-channels'
+import type { StatusStateInterface } from './module-status/state'
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -49,7 +51,9 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
         auth,
-        channels
+        channels,
+        status
+        
     },
 
     // enable strict mode (adds overhead!)
