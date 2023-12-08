@@ -16,7 +16,6 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
                 await dispatch('channels/join', 'General', { root: true })
             }
             commit('AUTH_SUCCESS', user)
-            commit('SET_STATUS', 'online')
             return user !== null
         } catch (err) {
             commit('AUTH_ERROR', err)
@@ -39,7 +38,6 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
         try {
             commit('AUTH_START')
             const apiToken = await authService.login(credentials)
-            commit('SET_STATUS', 'online')
             commit('AUTH_SUCCESS', null)
             // save api token to local storage and notify listeners
             authManager.setToken(apiToken.token)
@@ -62,9 +60,11 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
             throw err
         }
     },
-    async changeStatus({ commit }, status: string) {
+    async changeStatus({ commit, getters }, status: string) {
+        if ( await activitySocketManager.statusChange(status) !== true ) return
         commit('SET_STATUS', status)
-        activitySocketManager.statusChange(status)
+        const username = getters['username']
+        commit('channels/SET_MEMBERS_STATUS', {username, status}, {root: true})
     },
 }
 

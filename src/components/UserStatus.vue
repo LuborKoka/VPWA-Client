@@ -34,7 +34,7 @@ export default defineComponent({
         }
     },
     computed: {
-        ...mapGetters('auth', ['status']),
+        ...mapGetters('auth', ['status', 'username']),
         selectedItem() {
             return this.statusItems.find((i) => i.val === this.status)
         },
