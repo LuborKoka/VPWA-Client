@@ -26,7 +26,7 @@ class ChannelSocketManager extends SocketManager {
         })
     }
 
-    public addMessage (message: RawMessage): Promise<SerializedMessage> {
+    public addMessage (message: RawMessage): Promise<SerializedMessage | string> {
         return this.emitAsync('addMessage', message)
     }
 
@@ -34,42 +34,39 @@ class ChannelSocketManager extends SocketManager {
         return this.emitAsync('unsentMessage', message)
     }
 
-    public loadMessages (): Promise<SerializedMessage[]> {
+    public loadMessages (): Promise<SerializedMessage[] | string> {
         return this.emitAsync('loadMessages')
     }
 
-    public loadMembers(): Promise<ChannelMember[]> {
+    public loadMembers(): Promise<ChannelMember[] | string> {
         return this.emitAsync('loadMembers')
     }
-    /*public loadUser(): Promise<ChannelMember[]> {
-        return this.emitAsync('loadMembers')
-    }
-    */
-    public joinNewChannel(username: string): Promise<boolean> {
-        return this.emitAsync('joinChannel', username)
+    public joinOrCreateChannel(isPrivate: boolean): Promise<SerializedChannel> {
+        return this.emitAsync('joinChannel', isPrivate)
     }
 
-    public createChannel(username: string, isPrivate: boolean): Promise<SerializedChannel> {
-        return this.emitAsync('createChannel', username, isPrivate)
+    // stara a nespravna verzia, ale radsej sem napisem poznamku, ako keby som to mal vymazat
+    public createChannel(isPrivate: boolean): Promise<SerializedChannel> {
+        return this.emitAsync('createChannel', isPrivate)
     }
 
-    public deleteChannel(username: string): Promise<boolean> {
+    public deleteChannel(username: string): Promise<boolean | string> {
         return this.emitAsync('deleteChannel', username)
     }
 
-    public quitChannel(username: string): Promise<boolean> {
-        return this.emitAsync('quitChannel', username)
+    public quitChannel(): Promise<SerializedChannel | string> {
+        return this.emitAsync('quitChannel')
     }
 
-    public inviteToChannel(username: string, targetName: string): Promise<boolean> {
+    public inviteToChannel(username: string, targetName: string): Promise<boolean | string> {
         return this.emitAsync('inviteToChannel', username, targetName)
     }
 
-    public revokeFromChannel(username: string, targetName: string): Promise<boolean> {
+    public revokeFromChannel(username: string, targetName: string): Promise<boolean | string> {
         return this.emitAsync('revokeFromChannel', username, targetName)
     }
 
-    public handleInvite(inviteId: string, accepted: boolean): Promise<boolean> {
+    public handleInvite<t>(inviteId: string, accepted: boolean): Promise<t> {
         return this.emitAsync('handleInvite', inviteId, accepted)
     }
 }
@@ -92,7 +89,7 @@ class ChannelService {
         const channel = this.channels.get(name)
 
         if (!channel) {
-        return false
+            return false
         }
 
         // disconnect namespace and remove references to socket

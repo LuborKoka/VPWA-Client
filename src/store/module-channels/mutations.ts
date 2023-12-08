@@ -45,6 +45,13 @@ const mutation: MutationTree<ChannelsStateInterface> = {
     },
     SET_MEMBERS(state, { channel, members }: { channel: string, members: ChannelMember[]}) {
         state.members[channel] = members
+    },
+    SET_MEMBERS_STATUS(state, { username, status }: {username: string, status: string}) {
+        for ( const channelName in state.members ) {
+            state.members[channelName].forEach(e => {
+                if ( e.username === username ) e.status = status
+            })
+        }
     }
 }
 

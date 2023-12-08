@@ -22,13 +22,13 @@ type Me = {
 class AuthService {
     async me (dontTriggerLogout = false): Promise<Me | null> {
         return api.get(
-        'auth/me',
-        { dontTriggerLogout } as AxiosRequestConfig
+            'auth/me',
+            { dontTriggerLogout } as AxiosRequestConfig
         )
         .then((response) => response.data)
         .catch((error: AxiosError) => {
             if (error.response?.status === 401) {
-            return null
+                return null
             }
 
             return Promise.reject(error)

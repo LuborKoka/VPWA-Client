@@ -17,6 +17,7 @@
 import { defineComponent } from 'vue';
 import { channelService } from 'src/services';
 import { mapMutations } from 'vuex';
+import { SerializedChannel } from 'src/contracts';
 
 export default defineComponent({
     name: 'ChannelInvitation',
@@ -28,26 +29,38 @@ export default defineComponent({
         id: {
             type: String,
             required: true
+        },
+        isPrivate: {
+            type: Boolean,
+            default: true
         }
     },
     methods: {
         ...mapMutations('auth', ['ADD_CHANNEL', 'REMOVE_CHANNEL', 'REMOVE_INVITE']),
         async accept() {
-            const res = await channelService.join(encodeURIComponent(this.title)).handleInvite(this.id, true)
-            console.log(res)
+            const name = encodeURIComponent(this.title)
+            const socket = channelService.in(name) || channelService.join(name)
+            const res = await socket.handleInvite<SerializedChannel>(this.id, true)
             if ( res !== null ) {
                 this.ADD_CHANNEL(res)
                 this.REMOVE_INVITE(this.title)
+                this.$store.dispatch('channels/join', name)
+                this.$router.push({
+                    path: '/channels',
+                    query: { name: name },
+                })
             }
         },
         async decline() {
             const name = encodeURIComponent(this.title)
-            const res = await channelService.join(name).handleInvite(this.id, false)
-            if ( res === true ) {
-                channelService.leave(name)
-                this.REMOVE_CHANNEL(name)
-                this.REMOVE_INVITE(this.title)
-            }
+            const socket = channelService.in(name) || channelService.join(name)
+            const res = await socket.handleInvite(this.id, false)
+
+            channelService.leave(name)
+            this.REMOVE_CHANNEL(name)
+            this.REMOVE_INVITE(this.title)
+            this.ADD_CHANNEL(res)
+
         }
     }
 })

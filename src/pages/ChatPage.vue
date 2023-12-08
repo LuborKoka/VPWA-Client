@@ -10,6 +10,7 @@
           text-color="white"
           :bg-color="isIncoming(message.senderName) ? 'secondary' : 'primary'"
           :sent="isIncoming(message.senderName)"
+          :stamp="new Date(message.createdAt).toLocaleString()"
         >
         </q-chat-message>
         <unsent-message
@@ -29,16 +30,18 @@ import CommandLine from 'src/components/CommandLine.vue';
 import UnsentMessage from 'src/components/UnsentMessage.vue';
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
+import { channelService } from 'src/services';
 
 
 export default defineComponent({
     components: {
         CommandLine,
-        UnsentMessage,
+        UnsentMessage
     },
     data() {
         return {
-            newMessage: ''
+            newMessage: '',
+            dialogVisible: false,
         };
     },
     computed: {
@@ -53,7 +56,8 @@ export default defineComponent({
             return senderName === this.username
         },
         setActiveChannel(newRoute: string) {
-            this.$store.dispatch('channels/join', newRoute)
+            if ( !channelService.in(newRoute) )
+                this.$store.dispatch('channels/join', newRoute)
             this.$store.commit('channels/SET_ACTIVE', newRoute)
         }
     },
@@ -61,7 +65,16 @@ export default defineComponent({
         this.setActiveChannel(to.query.name as string)
         next()
     },
-});
+    beforeMount() {
+        const channel = this.$route.query.name?.toString()
+        if ( !channel )
+            this.$router.push({
+                path: '/channels',
+                query: { name: 'General' },
+            })
+        this.setActiveChannel( channel || 'General')
+    }
+})
 </script>
 
 <style scoped>

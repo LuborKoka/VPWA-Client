@@ -20,8 +20,10 @@ const getters: GetterTree<ChannelsStateInterface, StateInterface> = {
     },
     unsentMessages(context) {
         return context.active !== null ? context.someoneIsTypingMessages[context.active] : []
+    },
+    activeChannel(context) {
+        return context.active
     }
-
 }
 
 export default getters

@@ -21,7 +21,7 @@ Joins a public channel if not a member already or creates a new channel
 Syntax:
 
 ```bash
-/join [<channel_name>] [options]
+/join <channel_name> [options]
 ```
 
 Options:

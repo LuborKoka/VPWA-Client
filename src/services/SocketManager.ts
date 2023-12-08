@@ -1,7 +1,8 @@
 import type { BootCallback } from '@quasar/app-webpack'
 import type { StateInterface } from 'src/store'
 import { Manager, Socket } from 'socket.io-client'
-import { authManager } from '.'
+import { authManager, channelService } from '.'
+import { Invitation, SerializedChannel, SerializedMessage } from 'src/contracts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BootParams<T extends BootCallback<StateInterface> = BootCallback<StateInterface>> = T extends (params: infer P) => any ? P : never
@@ -27,7 +28,7 @@ export abstract class SocketManager implements SocketManagerContract {
   private static manager: Manager
   private static instances: SocketManagerContract[] = []
   private static namespaces: Set<string> = new Set()
-  private static params: BootParams | null = null
+  protected static params: BootParams | null = null
 
   public static getManager () {
     if (!this.manager) {
@@ -124,6 +125,35 @@ export abstract class SocketManager implements SocketManagerContract {
       }
     })
 
+    socket.on('channelInvitation', (inv: Invitation) => {
+        SocketManager.params?.store.commit('auth/ADD_INVITE', inv)
+    })
+
+    socket.on('channelCreated', (channel: SerializedChannel) => {
+        SocketManager.params?.store.commit('auth/ADD_CHANNEL', channel)
+    })
+
+    socket.on('channelDeleted', (channelName: string) => {
+        SocketManager.params?.store.commit('auth/REMOVE_CHANNEL', channelName)
+    })
+
+    //zadanie som pochopil tak, ze sa daju ludia revokovat len z private channelu, na public je /kick prikaz
+    //cize tunak riesim len ten revoke z public channelu, v mojej appke sa vlastne ludia z publicu nedaju vyrazit
+    socket.on('revoke', (channel: SerializedChannel) => {
+        const name = encodeURIComponent(channel.name)
+        const active = SocketManager.params?.store.getters['channels/activeChannel'] as string | null
+        channelService.leave(name)
+        const message: SerializedMessage = {
+            senderName: 'System',
+            content: `You were removed from the channel ${channel.name}`,
+            createdAt: new Date().toISOString(),
+            senderId: 'sender_id',
+            id: `${channel.id} ${new Date().toTimeString()}`
+        }
+        SocketManager.params?.store.commit('channels/NEW_MESSAGE', {channel: active || name, message: message})
+
+    })
+
     if (DEBUG) {
       socket.on('connect', () => {
         console.info(`${this.namespace} [connect]`)
@@ -136,6 +166,8 @@ export abstract class SocketManager implements SocketManagerContract {
       socket.on('error', (err: Error) => {
         console.error(`${this.namespace} [error]`, err.message)
       })
+
+
 
       socket.onAny((event, ...args) => {
         console.info(`${this.namespace} [${event}]`, args)

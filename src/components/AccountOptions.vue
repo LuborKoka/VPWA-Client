@@ -44,6 +44,7 @@ export default defineComponent({
     },
     methods: {
         logout() {
+            this.$store.dispatch('channels/leave')
             this.$store.dispatch('auth/logout')
         },
     },

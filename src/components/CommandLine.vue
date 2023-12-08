@@ -1,38 +1,57 @@
 <template>
-  <form class="q-pa-md" @submit.prevent="submitMessage" @submit="focusInput">
-    <input
-      v-model="newMessage"
-      class="q-py-xs q-px-sm command-line"
-      type="text"
-      required
-      placeholder="Type your command"
-      ref="input"
-      @input="handleInput"
-    />
+    <confirmation-popup :popupVisible="isOpenPopup" :setIsOpen="closePopup"
+        :text="confirmationText" :callback="callback">
+    </confirmation-popup>
+    <form class="q-pa-md" @submit.prevent="submitMessage" @submit="focusInput">
+        <input
+        v-model="newMessage"
+        class="q-py-xs q-px-sm command-line"
+        type="text"
+        required
+        placeholder="Type your command"
+        ref="input"
+        @input="handleInput"
+        />
 
-    <q-btn type="submit" round class="q-ml-md" icon="send" />
-  </form>
+        <q-btn type="submit" round class="q-ml-md" icon="send" />
+    </form>
 </template>
 
 <script lang="ts">
-import { SerializedChannel } from 'src/contracts/Channels';
+import { SerializedMessage } from 'src/contracts';
+import ConfirmationPopup from './ConfirmationPopup.vue';
 import { channelService } from 'src/services';
 import { defineComponent, ref } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default defineComponent({
     name: 'CommandLine',
+    components: {
+        ConfirmationPopup
+    },
     computed: {
         ...mapGetters('auth', ['channels', 'username'])
     },
-    setup() {
-        const newMessage = ref('');
+    data() {
         return {
-            newMessage,
-        };
+            isOpenPopup: false,
+            newMessage: ref(''),
+            // eslint-disable-next-line @typescript-eslint/ban-types
+            callback: undefined as (() => Promise<void>) | undefined,
+            confirmationText: ''
+        }
     },
     methods: {
         ...mapActions('channels', ['addMessage']),
+
+        closePopup() {
+            this.isOpenPopup = false
+        },
+
+        openPopup(confirmationText: string) {
+            this.confirmationText = confirmationText
+            this.isOpenPopup = true
+        },
 
         focusInput() {
             (this.$refs.input as HTMLInputElement).focus()
@@ -45,6 +64,18 @@ export default defineComponent({
 
             const channelName = this.$route.query.name as string
             channelService.in(channelName)?.unsentMessage(value)
+        },
+
+        displayErrMsg(content: string) {
+            const channel = this.$route.query.name?.toString()
+            const message: SerializedMessage = {
+                senderId: 'system',
+                senderName: 'System',
+                content,
+                createdAt: new Date().toISOString(),
+                id: `SystemMessage${Date.now().toString()}`
+            }
+            this.$store.commit('channels/NEW_MESSAGE', {channel, message})
         },
 
 
@@ -67,14 +98,16 @@ export default defineComponent({
             }
         },
 
+        navigate(channelName: string) {
+            this.$store.commit('channels/SET_ACTIVE', 'Generals')
+            this.$router.push({
+                path: '/channels',
+                query: { name: channelName },
+            })
+        },
+
 
         async handleCommand(command: string, channelName: string) {
-            /**
-             * @param channelName
-             *      the name of the current channel, encodeURIComponent is called inside this function
-             *
-             */
-
             const commands = command.split(' ')
             let name: string
 
@@ -83,57 +116,77 @@ export default defineComponent({
                     this.$store.dispatch('channels/getMembers', channelName)
                     return
                 case '/join':
-                    const channels = this.channels as SerializedChannel[]
-                    let channel = channels.find(c => c.name === channelName)
+                    this.callback = async () => {
+                        const newChannelName = commands.at(-1) === '-p' ?
+                            encodeURIComponent(commands.slice(1, -1).join(' ')) :
+                            encodeURIComponent(commands.slice(1).join(' '))
 
-                    //join public channel
-                    if ( channel && channel.isMember === false ) {
-                        console.log('but why???')
-                        const channelSocket = await channelService.in(channelName)
-                        channelSocket?.joinNewChannel(this.username)
-                        channel.isMember = true
-                        return
-                    }
-                    const newChannelName = commands.at(-1) === '-p' ?
-                        encodeURIComponent(commands.slice(1, -1).join(' ')) :
-                        encodeURIComponent(commands.slice(1).join(' '))
-                    channel = channels.find(c => c.name === newChannelName)
-                    //create a new channel
-                    if ( !channel || channel.isMember === false ) {
-                        const socket = channelService.join(newChannelName)
                         const isPrivate = commands.at(-1) === '-p'
 
-                        const newChannel = await socket.createChannel(this.username, isPrivate)
+                        await this.$store.dispatch('channels/joinOrCreate', { channel: newChannelName, isPrivate})
 
-                        this.$store.commit('auth/ADD_CHANNEL', newChannel)
+                        this.navigate(newChannelName)
                     }
+                    this.openPopup('You will join or create a new channel.')
                     return
 
 
                 case '/quit':
-                    const success = await channelService.in(channelName)?.deleteChannel(this.username)
+                    this.callback = async() => {
+                        const res = await channelService.in(channelName)?.deleteChannel(this.username)
 
-                    if ( success === true ) {
-                        channelService.leave(channelName)
-                        this.$store.commit('auth/REMOVE_CHANNEL', channelName)
+                        if ( typeof res === 'string' ) return this.displayErrMsg(res)
+
+                        if ( res === true ) {
+                            channelService.leave(channelName)
+                            this.$store.dispatch('channels/leave', channelName)
+                            this.$store.commit('auth/REMOVE_CHANNEL', channelName)
+                            this.navigate('General')
+                        }
                     }
+                    this.openPopup('You will delete this channel (if allowed).')
                     return
 
                 case '/cancel':
-                    const deleteChannel = await channelService.in(channelName)?.quitChannel(this.username)
-                    channelService.leave(channelName)
-                    if ( deleteChannel === true )
-                        this.$store.commit('auth/REMOVE_CHANNEL', channelName)
+                    this.callback = async () => {
+                        const deleteChannel = await channelService.in(channelName)?.quitChannel()
+
+                        if ( typeof deleteChannel === 'string' ) {
+                            return this.displayErrMsg(deleteChannel)
+                        }
+
+                        if ( deleteChannel ) {
+                            this.$store.dispatch('channels/leave', channelName)
+                            channelService.leave(channelName)
+                            if ( deleteChannel.isPrivate)
+                                this.$store.commit('auth/REMOVE_CHANNEL', channelName)
+                        }
+
+                        this.navigate('General')
+                    }
+
+                    this.openPopup('You will leave the channel. If you\'re the admin, you will delete it.')
                     return
 
                 case '/invite':
-                    name = command.split(' ').slice(1).join(' ')
-                    await channelService.in(channelName)?.inviteToChannel(this.username, name)
+                    this.callback =async () => {
+                        name = command.split(' ').slice(1).join(' ')
+                        const res = await channelService.in(channelName)?.inviteToChannel(this.username, name)
+                        if ( typeof res === 'string' ) return this.displayErrMsg(res)
+                        if ( res === true ) return this.displayErrMsg('User invited.') //jako neni to uplne error message, ale whatever
+                    }
+
+                    this.openPopup('You will invite a new user.')
                     return
 
                 case '/revoke':
-                    name = command.split(' ').slice(1).join(' ')
-                    await channelService.in(channelName)?.revokeFromChannel(this.username, name)
+                    this.callback =async () => {
+                        name = command.split(' ').slice(1).join(' ')
+                        const res = await channelService.in(channelName)?.revokeFromChannel(this.username, name)
+                        if ( typeof res === 'string' ) return this.displayErrMsg(res)
+                        if ( res === true ) return this.displayErrMsg('User revoked.')
+                    }
+                    this.openPopup('You will revoke a user.')
                     return
             }
         }

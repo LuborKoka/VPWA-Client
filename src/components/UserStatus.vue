@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-btn-dropdown :color="statusColor" :label="`Status: ${status}`">
+    <q-btn-dropdown :color="color" :label="`Status: ${status}`">
       <q-list>
         <q-item
           v-for="(item, index) in statusItems"
@@ -19,50 +19,27 @@
 </template>
 
 <script>
-import { ref, defineComponent, useStore , computed} from 'vue';
-import { mapGetters } from 'vuex';
+import { ref, defineComponent } from 'vue';
 
 export default defineComponent({
-  computed: {
-        ...mapGetters('auth', {
-            username: ['username'],
-            userstatus: ['status']
-          })
+    name: 'UserStatus',
+    data() {
+        return {
+            statusItems: ref([
+                { label: 'Online', color: 'green', val: 'online' },
+                { label: 'Do Not Disturb', color: 'red', val: 'dnd' },
+                { label: 'Offline', color: 'secondary', val: 'offline' },
+            ]),
+            status: 'online',
+            color: 'green'
+        }
     },
-
-
-  setup() {
-    const statusItems = ref([
-      { label: 'Online', color: 'green' },
-      { label: 'Do Not Disturb', color: 'red' },
-      { label: 'Offline', color: 'secondary' },
-    ]);
-
-    /*const username = computed(() => {
-      return this.$store.getters['auth/username'];
-    });
-    */
-    //const initialStatus = $store.getItem('auth/status') || ref(statusItems.value[0].label);
-    //const status = ref(initialStatus);
-
-
-    const status = ref(statusItems.value[0].label);
-    const statusColor = ref(statusItems.value[0].color);
-
-    //dorobit, aby to aj nieco realne robilo a nie len menilo farby
-    const onItemClick = (item) => {
-      status.value = item.label;
-      statusColor.value = item.color;
-     // console.log(userstatus);
-      
-    };
-
-    return {
-      status,
-      statusColor,
-      statusItems,
-      onItemClick,
-    };
-  },
-});
+    methods: {
+        onItemClick(item) {
+            this.status = item.label
+            this.color = item.color
+            this.$store.commit('auth/SET_STATUS', item.val)
+        }
+    }
+})
 </script>

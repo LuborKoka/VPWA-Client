@@ -31,6 +31,7 @@
                     :title="inv.channelName"
                     :id="inv.id"
                     :key="inv.channelName"
+                    :is-private="false"
                 ></channel-invitation>
                 <channel-nav
                     v-for="channel in channels.filter(c => !c.isPrivate)"
@@ -138,11 +139,6 @@ export default defineComponent({
         toggleRightDrawer,
         cursorPosition,
         showUserProfile: false,
-        users: [
-            { username: 'Peter Paprika', status: 'online' },
-            { username: 'Štefan Nátierka', status: 'dnd' },
-            { username: 'Michal Panvica', status: 'offline' },
-        ],
         delay,
         };
     },
