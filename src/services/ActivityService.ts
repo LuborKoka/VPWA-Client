@@ -20,6 +20,12 @@ class ActivitySocketManager extends SocketManager {
             SocketManager.params?.store.commit('channels/SET_MEMBERS_STATUS', {username, status})
         })
 
+        this.socket.on('user:dnd', (user: User) => {
+            const username = user.username
+            const status = 'dnd'
+            SocketManager.params?.store.commit('channels/SET_MEMBERS_STATUS', {username, status})
+        })
+
         authManager.onChange((token) => {
             if (token) {
                 this.socket.connect()
@@ -28,8 +34,12 @@ class ActivitySocketManager extends SocketManager {
             }
         })
     }
+
+    public async statusChange(status: string) {
+        return this.emitAsync('statusChange', status)
+    }
 }
 
 
-
-export default new ActivitySocketManager('/')
+const activitySocketManager = new ActivitySocketManager('/')
+export default activitySocketManager

@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-btn-dropdown :color="color" :label="`Status: ${status}`">
+    <q-btn-dropdown :color="selectedItem.color" :label="`Status: ${selectedItem.label}`">
       <q-list>
         <q-item
           v-for="(item, index) in statusItems"
@@ -20,6 +20,7 @@
 
 <script>
 import { ref, defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
     name: 'UserStatus',
@@ -29,16 +30,21 @@ export default defineComponent({
                 { label: 'Online', color: 'green', val: 'online' },
                 { label: 'Do Not Disturb', color: 'red', val: 'dnd' },
                 { label: 'Offline', color: 'secondary', val: 'offline' },
-            ]),
-            status: 'online',
-            color: 'green'
+            ])
         }
+    },
+    computed: {
+        ...mapGetters('auth', ['status']),
+        selectedItem() {
+            return this.statusItems.find((i) => i.val === this.status)
+        },
     },
     methods: {
         onItemClick(item) {
             this.status = item.label
             this.color = item.color
-            this.$store.commit('auth/SET_STATUS', item.val)
+            //this.$store.commit('auth/SET_STATUS', item.val)
+            this.$store.dispatch('auth/changeStatus', item.val)
         }
     }
 })

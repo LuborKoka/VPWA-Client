@@ -3,6 +3,7 @@ import { StateInterface } from '../index'
 import { AuthStateInterface } from './state'
 import { authService, authManager } from 'src/services'
 import { LoginCredentials, RegisterData } from 'src/contracts'
+import activitySocketManager from 'src/services/ActivityService'
 
 const actions: ActionTree<AuthStateInterface, StateInterface> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,6 +16,7 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
                 await dispatch('channels/join', 'General', { root: true })
             }
             commit('AUTH_SUCCESS', user)
+            commit('SET_STATUS', 'online')
             return user !== null
         } catch (err) {
             commit('AUTH_ERROR', err)
@@ -37,6 +39,7 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
         try {
             commit('AUTH_START')
             const apiToken = await authService.login(credentials)
+            commit('SET_STATUS', 'online')
             commit('AUTH_SUCCESS', null)
             // save api token to local storage and notify listeners
             authManager.setToken(apiToken.token)
@@ -60,9 +63,8 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
         }
     },
     async changeStatus({ commit }, status: string) {
-
-
         commit('SET_STATUS', status)
+        activitySocketManager.statusChange(status)
     },
 }
 
