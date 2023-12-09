@@ -27,13 +27,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     async addMessage ({ commit }, { channel, message }: { channel: string, message: RawMessage }) {
         const newMessage = await channelService.in(channel)?.addMessage(message)
         if ( typeof newMessage === 'string' ) {
-            const message: SerializedMessage = {
-                senderId: 'System',
-                senderName: 'System',
-                content: newMessage,
-                createdAt: new Date().toISOString(),
-                id: `SystemMessage${Date.now().toString()}`
-            }
+            const message = systemMessage(newMessage)
             return commit('NEW_MESSAGE', { channel, message})
         }
         commit('NEW_MESSAGE', { channel, message: newMessage })
@@ -41,13 +35,7 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
     async getMembers({ commit }, channel: string) {
         const members = await channelService.in(channel)?.loadMembers()
         if ( typeof members === 'string' ) {
-            const message: SerializedMessage = {
-                senderId: 'System',
-                senderName: 'System',
-                content: members,
-                createdAt: new Date().toISOString(),
-                id: `SystemMessage${Date.now().toString()}`
-            }
+            const message = systemMessage(members)
             return commit('NEW_MESSAGE', { channel, message})
         }
         commit('SET_MEMBERS', { channel, members})
@@ -57,6 +45,10 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
         commit('LOADING_START')
         const socket = channelService.in(channel) || channelService.join(channel)
         const newChannel = await socket.joinOrCreateChannel(isPrivate)
+        if ( typeof newChannel === 'string' ) {
+            const message = systemMessage(newChannel)
+            return commit('NEW_MESSAGE', { channel, message})
+        }
         commit('ADD_CHANNEL', newChannel)
         const messages = await socket.loadMessages()
         commit('LOADING_SUCCESS', { channel, messages })
@@ -65,3 +57,18 @@ const actions: ActionTree<ChannelsStateInterface, StateInterface> = {
 }
 
 export default actions
+
+
+
+
+function systemMessage(content: string) {
+    const message: SerializedMessage = {
+        senderId: 'System',
+        senderName: 'System',
+        content: content,
+        createdAt: new Date().toISOString(),
+        id: `SystemMessage${Date.now().toString()}`
+    }
+
+    return message
+}

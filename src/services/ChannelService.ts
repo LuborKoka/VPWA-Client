@@ -41,7 +41,7 @@ class ChannelSocketManager extends SocketManager {
     public loadMembers(): Promise<ChannelMember[] | string> {
         return this.emitAsync('loadMembers')
     }
-    public joinOrCreateChannel(isPrivate: boolean): Promise<SerializedChannel> {
+    public joinOrCreateChannel(isPrivate: boolean): Promise<SerializedChannel | string> {
         return this.emitAsync('joinChannel', isPrivate)
     }
 

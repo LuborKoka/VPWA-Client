@@ -10,7 +10,7 @@
           ></q-icon>
         </q-item-section>
         <q-item-section>
-          <q-item-label > {{ username }}</q-item-label>
+          <q-item-label style="text-transform: none;"> {{ username }}</q-item-label> <!--how do i make this not upper case the text?-->
         </q-item-section>
       </q-item>
       <q-popup-proxy>
