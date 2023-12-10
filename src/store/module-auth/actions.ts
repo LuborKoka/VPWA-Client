@@ -2,7 +2,7 @@ import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { AuthStateInterface } from './state'
 import { authService, authManager } from 'src/services'
-import { LoginCredentials, RegisterData } from 'src/contracts'
+import { LoginCredentials, RegisterData, Invite } from 'src/contracts'
 import activitySocketManager from 'src/services/ActivityService'
 
 const actions: ActionTree<AuthStateInterface, StateInterface> = {
@@ -66,6 +66,10 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
         const username = getters['username']
         commit('channels/SET_MEMBERS_STATUS', {username, status}, {root: true})
     },
+    newInvitation({ commit }, invitation: Invite) {
+        commit('REMOVE_CHANNEL', encodeURIComponent(invitation.channelName))
+        commit('ADD_INVITE', invitation)
+    }
 }
 
 export default actions

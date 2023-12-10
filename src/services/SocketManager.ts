@@ -126,7 +126,7 @@ export abstract class SocketManager implements SocketManagerContract {
     })
 
     socket.on('channelInvitation', (inv: Invitation) => {
-        SocketManager.params?.store.commit('auth/ADD_INVITE', inv)
+        SocketManager.params?.store.dispatch('auth/newInvitation', inv)
     })
 
     socket.on('channelCreated', (channel: SerializedChannel) => {

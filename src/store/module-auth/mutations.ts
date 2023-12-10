@@ -24,7 +24,8 @@ const mutations: MutationTree<AuthStateInterface> = {
         const channels = state.user?.channels || []
         const index = channels?.findIndex(c => c.name === channelName)
 
-        channels.splice(index, 1)
+        if ( index !== -1 && index !== undefined)
+            channels.splice(index, 1)
     },
     REMOVE_INVITE(state, channelName) {
         const invites = state.user?.invitations

@@ -144,8 +144,8 @@ module.exports = configure(function (ctx) {
       // chainWebpackCustomSW (/* chain */) {},
 
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
+        name: 'Fake Slack',
+        short_name: 'Fake Slack',
         description: '',
         display: 'standalone',
         orientation: 'portrait',
